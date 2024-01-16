@@ -49,6 +49,8 @@ for i, v in pairs(game:GetService("Players"):GetChildren()) do
     end
 end
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/main.lua"))()
+
 task.spawn(function()
 	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 		game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
@@ -57,5 +59,3 @@ task.spawn(function()
 		jumpToServer()
 	end)
 end)
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/main.lua"))()
