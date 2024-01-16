@@ -50,7 +50,7 @@ for i, v in pairs(game:GetService("Players"):GetChildren()) do
 end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/main.lua"))()
-print(executed)
+print('executed')
 
 task.spawn(function()
 	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
