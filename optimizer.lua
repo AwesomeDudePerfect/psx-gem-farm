@@ -39,6 +39,8 @@ local function jumpToServer()
 	until game.JobId ~= game.JobId
 end
 
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
+
 for i, v in pairs(game:GetService("Players"):GetChildren()) do
     print(v.Name)
 
