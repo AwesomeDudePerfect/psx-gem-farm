@@ -1,6 +1,5 @@
 repeat wait() until game:IsLoaded()
 wait(20)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Root1527/personal/main/lowcpu.lua"))()
 
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 local Players = game:GetService('Players')
@@ -51,6 +50,9 @@ for i, v in pairs(game:GetService("Players"):GetChildren()) do
         end
     end
 end
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Root1527/personal/main/lowcpu.lua"))()
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/main.lua"))()
 print('executed')
