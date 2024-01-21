@@ -5,6 +5,7 @@ game:GetService("RunService"):Set3dRenderingEnabled(false)
 local Players = game:GetService('Players')
 local Player = Players.LocalPlayer.Name
 local getPlayers = Players:GetPlayers()
+local PlayerInServer = #getPlayers
 local http = game:GetService("HttpService")
 local ts = game:GetService("TeleportService")
 local NiggasToAvoid = {
@@ -39,6 +40,12 @@ local function jumpToServer()
 end
 
 game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
+
+if PlayerInServer <= 8 then
+	while task.wait(1) do
+		jumpToServer()
+	end
+end
 
 for i, v in pairs(game:GetService("Players"):GetChildren()) do
     print(v.Name)
