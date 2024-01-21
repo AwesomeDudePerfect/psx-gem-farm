@@ -41,7 +41,7 @@ end
 
 game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
 
-if PlayerInServer <= 8 then
+if PlayerInServer >= 8 then
 	while task.wait(1) do
 		jumpToServer()
 	end
