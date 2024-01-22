@@ -44,7 +44,7 @@ local function jumpToServer()
 	    if not randomCount then
 			randomCount = 2
 	    end
-    	ts:TeleportToPlaceInstance(15588442388, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer)
+    	ts:TeleportToPlaceInstance(8737899170, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer)
 	until game.JobId ~= game.JobId
 end
 
