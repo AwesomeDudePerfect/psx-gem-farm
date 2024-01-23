@@ -69,10 +69,6 @@ end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Root1527/personal/main/lowcpu.lua"))()
 
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/main.lua"))()
-print('executed')
-
 task.spawn(function()
 	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 		jumpToServer()
@@ -81,3 +77,6 @@ task.spawn(function()
 		wait(0.1)
 	end)
 end)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/main.lua"))()
+print('executed')
