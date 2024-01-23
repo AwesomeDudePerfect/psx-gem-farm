@@ -18,7 +18,7 @@ local NiggasToAvoid = {
 
 local function jumpToServer()
 	repeat
-		local deep = math.random(1, 25)
+		local deep = math.random(1, 5)
 		local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s" 
 		local req = request({ Url = string.format(sfUrl, 8737899170, "Asc", 100) }) 
 		local body = http:JSONDecode(req.Body)
