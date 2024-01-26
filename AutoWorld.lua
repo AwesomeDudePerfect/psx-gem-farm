@@ -26,8 +26,9 @@ end)
 
 -- get list of areas
 for _,v in pairs(AreaModules:GetDescendants()) do
+	wait(0.2)
 	if not v:IsA("ModuleScript") then continue end
-	local Info = string.split(v.Name," | ")
+	local Info = string.split(v.Name, " | ")
 	AreaList[tonumber(Info[1])] = Info[2]
 end
 
