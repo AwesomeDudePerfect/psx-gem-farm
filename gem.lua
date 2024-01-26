@@ -65,6 +65,12 @@ for Area,_ in next, UnlockedAreas do
 	if AreaNum > CurrentArea then
 		CurrentArea = AreaNum
 		AreaToUnlock = AreaList[AreaNum+1]
+		local args = {
+		    [1] = Area
+		}
+		
+		game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer(unpack(args))
+		task.wait(5)
 		FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
 		HRP.CFrame = FieldPart.CFrame
 		task.wait(1) -- wait for the game to load in everything
