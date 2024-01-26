@@ -1,4 +1,9 @@
 -- MADE BY MLGWARFARE ON DISCORD
+repeat wait() until game:IsLoaded()
+wait(10)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
+wait(5)
+
 local savemodule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 local SaveFile = savemodule.Get(game.Players.LocalPlayer)
 local UnlockedAreas = SaveFile.UnlockedZones
@@ -49,6 +54,13 @@ autoLootBagConnection = LootbagFolder.ChildAdded:Connect(function(v)
     v:Destroy()
 end)
 print('autolootbags done')
+--------------------------
+
+-- Infinite pet speed
+hookfunction(require(game.ReplicatedStorage.Library.Client.PlayerPet).CalculateSpeedMultiplier,function()
+  return 200
+end)
+---------------------
 
 c = lplr.CharacterAdded:Connect(function(Char)
 	Character = Char
@@ -70,7 +82,7 @@ for Area,_ in next, UnlockedAreas do
 		}
 		
 		game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer(unpack(args))
-		task.wait(5)
+		wait(5)
 		FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
 		HRP.CFrame = FieldPart.CFrame
 		task.wait(1) -- wait for the game to load in everything
@@ -79,6 +91,8 @@ for Area,_ in next, UnlockedAreas do
 end
 
 print("area to unlock:",AreaToUnlock)
+
+game:GetService("RunService"):Set3dRenderingEnabled(false)
 
 while true do
 	if Enabled then
@@ -90,11 +104,10 @@ while true do
 			FieldPart = MapContainer:WaitForChild(CurrentArea.." | "..AreaList[CurrentArea]):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
 			HRP.CFrame = FieldPart.CFrame
 			
-			-- FOR TO DAYCARE ONLY
-			--if CurrentArea == 20 then
-				--print("DAYCARE UNLOCKED STOPPING SCRIPT")
-				--break
-			--end
+			if CurrentArea == 92 then
+				print("DAYCARE UNLOCKED STOPPING SCRIPT")
+				break
+			end
 		else
 			HRP.CFrame = FieldPart.CFrame
 		end
