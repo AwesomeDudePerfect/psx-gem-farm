@@ -1,4 +1,5 @@
 wait(10)
+-- MADE BY MLGWARFARE ON DISCORD
 local savemodule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 local SaveFile = savemodule.Get(game.Players.LocalPlayer)
 local UnlockedAreas = SaveFile.UnlockedZones
@@ -16,26 +17,18 @@ local AreaToUnlock = ""
 local FieldPart = nil -- instance
 local AreaList = {}
 
-local vu = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    wait(1)
-    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-end)
-warn("Everything has loaded fully. Enjoy :)")
-
 -- grab new hrp
 local c,c2
 -- enable/disable
 c2 = Mouse.KeyDown:Connect(function(Key)
-    if Key == "p" then Enabled = not Enabled end
+	if Key == "p" then Enabled = not Enabled end
 end)
 
 -- get list of areas
 for _,v in pairs(AreaModules:GetDescendants()) do
-    if not v:IsA("ModuleScript") then continue end
-    local Info = string.split(v.Name," | ")
-    AreaList[tonumber(Info[1])] = Info[2]
+	if not v:IsA("ModuleScript") then continue end
+	local Info = string.split(v.Name," | ")
+	AreaList[tonumber(Info[1])] = Info[2]
 end
 
 ------ AUTO GET ORBS/LOOTBAGS
@@ -59,51 +52,51 @@ end)
 -------------------
 
 c = lplr.CharacterAdded:Connect(function(Char)
-    Character = Char
-    HRP = Character:WaitForChild("HumanoidRootPart")
+	Character = Char
+	HRP = Character:WaitForChild("HumanoidRootPart")
 end)
 
 local function Unlock()
-    return AreaUnlocker:InvokeServer(AreaToUnlock)
+	return AreaUnlocker:InvokeServer(AreaToUnlock)
 end
 
 -- find current area
-for Area,_ in pairs(UnlockedAreas) do
-    local AreaNum = table.find(AreaList,Area)
-    if AreaNum > CurrentArea then
-        CurrentArea = AreaNum
-        AreaToUnlock = AreaList[AreaNum+1]
-        FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
-        HRP.CFrame = FieldPart.CFrame
-        task.wait(.2) -- wait for the game to load in everything
-        --print("new greatest area",CurrentArea,AreaToUnlock)
-    end
+for Area,_ in next, UnlockedAreas do
+	local AreaNum = table.find(AreaList,Area)
+	if AreaNum > CurrentArea then
+		CurrentArea = AreaNum
+		AreaToUnlock = AreaList[AreaNum+1]
+		FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
+		HRP.CFrame = FieldPart.CFrame
+		task.wait(.2) -- wait for the game to load in everything
+		--print("new greatest area",CurrentArea,AreaToUnlock)
+	end
 end
 
-print("area to unlock:", AreaToUnlock)
+print("area to unlock:",AreaToUnlock)
 
 while true do
-    if Enabled then
-        -- attempt buy new area
-        if Unlock() then -- unlock succeeded
-            task.wait(3)
-            CurrentArea = CurrentArea + 1
-            AreaToUnlock = AreaList[CurrentArea+1]
-            FieldPart = MapContainer:WaitForChild(CurrentArea.." | "..AreaList[CurrentArea]):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
-            HRP.CFrame = FieldPart.CFrame
-            
-            -- FOR DESIRED STOPPING POINTS
-            if CurrentArea == 92 then
-                print("DESIRED AREA UNLOCKED")
-                break
-            end
-        else
-            HRP.CFrame = FieldPart.CFrame
-        end
-    else
-        break
-    end
-    task.wait(15)
+	if Enabled then
+		-- attempt buy new area
+		if Unlock() then -- unlock succeeded
+			task.wait(3)
+			CurrentArea += 1
+			AreaToUnlock = AreaList[CurrentArea+1]
+			FieldPart = MapContainer:WaitForChild(CurrentArea.." | "..AreaList[CurrentArea]):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
+			HRP.CFrame = FieldPart.CFrame
+			
+			-- FOR TO DAYCARE ONLY
+			--if CurrentArea == 20 then
+				--print("DAYCARE UNLOCKED STOPPING SCRIPT")
+				--break
+			--end
+		else
+			HRP.CFrame = FieldPart.CFrame
+		end
+	else
+		break
+	end
+	task.wait(15)
 end
 
 c:Disconnect()
