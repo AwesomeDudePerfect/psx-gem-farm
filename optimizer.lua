@@ -1,7 +1,7 @@
 repeat wait() until game:IsLoaded()
 wait(20)
 
-game:GetService("RunService"):Set3dRenderingEnabled(false)
+--game:GetService("RunService"):Set3dRenderingEnabled(false)
 local Players = game:GetService('Players')
 local Player = Players.LocalPlayer.Name
 local getPlayers = Players:GetPlayers()
