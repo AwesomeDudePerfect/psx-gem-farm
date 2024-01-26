@@ -1,4 +1,5 @@
 wait(10)
+print(executed)
 -- MADE BY MLGWARFARE ON DISCORD
 local savemodule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 local SaveFile = savemodule.Get(game.Players.LocalPlayer)
@@ -50,6 +51,7 @@ autoLootBagConnection = LootbagFolder.ChildAdded:Connect(function(v)
     task.wait()
     v:Destroy()
 end)
+print('autolootbags done')
 -------------------
 
 c = lplr.CharacterAdded:Connect(function(Char)
@@ -67,7 +69,7 @@ for Area,_ in next, UnlockedAreas do
 	if AreaNum > CurrentArea then
 		CurrentArea = AreaNum
 		AreaToUnlock = AreaList[AreaNum+1]
-		FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
+		FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area, 9999999999):WaitForChild("INTERACT", 9999999999):WaitForChild("BREAK_ZONES", 9999999999):WaitForChild("BREAK_ZONE", 9999999999)
 		HRP.CFrame = FieldPart.CFrame
 		task.wait(.2) -- wait for the game to load in everything
 		--print("new greatest area",CurrentArea,AreaToUnlock)
