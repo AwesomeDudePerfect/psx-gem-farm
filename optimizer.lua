@@ -67,7 +67,7 @@ for i, v in pairs(game:GetService("Players"):GetChildren()) do
     end
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Root1527/personal/main/lowcpu.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
 task.spawn(function()
 	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
