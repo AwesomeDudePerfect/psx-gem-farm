@@ -4,8 +4,6 @@ print('executed')
 local savemodule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 local SaveFile = savemodule.Get(game.Players.LocalPlayer)
 local UnlockedAreas = SaveFile.UnlockedZones
-print(UnlockedAreas)
-print(#UnlockedAreas)
 
 local lplr = game:GetService("Players").LocalPlayer
 local Character = lplr.Character or lplr.CharacterAdded:Wait()
@@ -66,7 +64,7 @@ local function Unlock()
 end
 
 -- find current area
-for Area,_ in next, UnlockedAreas do
+for Area,_ in next, #UnlockedAreas do
 	local AreaNum = table.find(AreaList,Area)
 	if AreaNum > CurrentArea then
 		CurrentArea = AreaNum
