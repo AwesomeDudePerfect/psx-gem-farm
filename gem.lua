@@ -67,7 +67,7 @@ for Area,_ in next, UnlockedAreas do
 		AreaToUnlock = AreaList[AreaNum+1]
 		FieldPart = MapContainer:WaitForChild(AreaNum.." | "..Area):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
 		HRP.CFrame = FieldPart.CFrame
-		task.wait(.2) -- wait for the game to load in everything
+		task.wait(1) -- wait for the game to load in everything
 		--print("new greatest area",CurrentArea,AreaToUnlock)
 	end
 end
