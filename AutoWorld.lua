@@ -69,7 +69,7 @@ local function Unlock()
 end
 
 -- find current area
-for Area,_ in next, UnlockedAreas do
+for Area,_ in CurrentArea, UnlockedAreas do
 	local AreaNum = table.find(AreaList,Area)
 	if AreaNum > CurrentArea then
 		CurrentArea = AreaNum
