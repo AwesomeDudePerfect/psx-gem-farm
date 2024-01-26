@@ -1,9 +1,11 @@
 wait(10)
-print(executed)
+print('executed')
 -- MADE BY MLGWARFARE ON DISCORD
 local savemodule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 local SaveFile = savemodule.Get(game.Players.LocalPlayer)
 local UnlockedAreas = SaveFile.UnlockedZones
+print(UnlockedAreas)
+print(#UnlockedAreas)
 
 local lplr = game:GetService("Players").LocalPlayer
 local Character = lplr.Character or lplr.CharacterAdded:Wait()
