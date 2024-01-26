@@ -82,3 +82,30 @@ for Area,_ in CurrentArea, UnlockedAreas do
 end
 
 print("area to unlock:",AreaToUnlock)
+
+while true do
+	if Enabled then
+		-- attempt buy new area
+		if Unlock() then -- unlock succeeded
+			task.wait(3)
+			CurrentArea += 1
+			AreaToUnlock = AreaList[CurrentArea+1]
+			FieldPart = MapContainer:WaitForChild(CurrentArea.." | "..AreaList[CurrentArea]):WaitForChild("INTERACT"):WaitForChild("BREAK_ZONES"):WaitForChild("BREAK_ZONE")
+			HRP.CFrame = FieldPart.CFrame
+			
+			-- FOR TO DAYCARE ONLY
+			--if CurrentArea == 20 then
+				--print("DAYCARE UNLOCKED STOPPING SCRIPT")
+				--break
+			--end
+		else
+			HRP.CFrame = FieldPart.CFrame
+		end
+	else
+		break
+	end
+	task.wait(15)
+end
+
+c:Disconnect()
+c2:Disconnect()
