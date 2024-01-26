@@ -3,6 +3,9 @@ print('executed')
 -- MADE BY MLGWARFARE ON DISCORD
 local savemodule = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 local SaveFile = savemodule.Get(game.Players.LocalPlayer)
+for i, v in pairs(SaveFile) do
+	print(v)
+end
 local UnlockedAreas = SaveFile.UnlockedZones
 
 local lplr = game:GetService("Players").LocalPlayer
