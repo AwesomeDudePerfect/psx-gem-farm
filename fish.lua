@@ -34,7 +34,7 @@ end
 if #ACTIVE:GetChildren() == 0 then
     teleportToFishingSite()
 else
-    continue
+    print('nah')
 end
 
 local CurrentLocalPlayerFishingModule = require(ACTIVE:WaitForChild("AdvancedFishing", 99999999999).ClientModule.FishingGame)
