@@ -93,8 +93,6 @@ local function getLocalPlayerBubbles(anchor)
     return myBubbles
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
-
 while task.wait(1) do
     pcall(function()
         local fishingInstance = THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
