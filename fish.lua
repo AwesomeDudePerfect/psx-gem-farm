@@ -1,3 +1,5 @@
+repeat wait() until game:IsLoaded() and game.PlaceId ~= nil
+
 -- Services
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
