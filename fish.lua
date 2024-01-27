@@ -24,6 +24,11 @@ local function teleportToFishingSite()
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer("Cloud Forest")
     wait(20)
     Monkey.Character.HumanoidRootPart.CFrame = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
+	if #ActiveMonkeys:GetChildren() >= 1 then
+		print('Successful tp to site')
+	elseif #ActiveMonkeys:GetChildren() == 0 then
+		Monkey.Character.HumanoidRootPart.CFrame = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
+	end
 end
 
 -- Check if there are active fishing instances; if not, teleport the player to the fishing site
