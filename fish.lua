@@ -105,7 +105,9 @@ while task.wait(1) do
             until not ACTIVE:FindFirstChild("AdvancedFishing") or (myAnchor and getLocalPlayerBubbles(myAnchor)) or InGame
 
             if getLocalPlayerRod():WaitForChild("FishingLine") then
-                NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
+                repeat
+                    NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
+                until not getLocalPlayerRod():WaitForChild("FishingLine")
                 waitForLocalPlayerGameState(true)
                 waitForLocalPlayerGameState(false)
             end
