@@ -16,7 +16,6 @@ local DEBRIS = Workspace:WaitForChild("__DEBRIS")
 local NETWORK = ReplicatedStorage:WaitForChild("Network")
 local OldLocalPlayerHooks = {}
 local LocalPlayerFishingGame = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
-local tpAdvancedFishing = game:GetService("Workspace"):WaitForChild("__THINGS"):WaitForChild("Instances"):WaitForChild("AdvancedFishing").Teleports.Enter
 
 --  functions
 
@@ -28,6 +27,7 @@ end)
 local function teleportToFishingSite()
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer(unpack({[1] = "Cloud Forest"}))
     wait(10)
+    local tpAdvancedFishing = game:GetService("Workspace"):WaitForChild("__THINGS"):WaitForChild("Instances"):WaitForChild("AdvancedFishing").Teleports.Enter
     HRP.CFrame = tpAdvancedFishing.CFrame
 end
 
