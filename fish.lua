@@ -1,4 +1,4 @@
-repeat wait() until game:IsLoaded()
+repeat task.wait() until game:IsLoaded() and game.PlaceId ~= nil
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
