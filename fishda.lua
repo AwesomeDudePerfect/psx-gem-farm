@@ -3,8 +3,6 @@ local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- LocalPlayer type shit
-
 local InGame = false
 local LocalPlayer = Players.LocalPlayer
 local THINGS = Workspace:WaitForChild("__THINGS")
@@ -13,7 +11,7 @@ local DEBRIS = Workspace:WaitForChild("__DEBRIS")
 local NETWORK = ReplicatedStorage:WaitForChild("Network")
 local OldLocalPlayerHooks = {}
 local LocalPlayerFishingGame = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
-local CurrentLocalPlayerFishingModule = require(THINGS.__INSTANCE_CONTAINER.Active:WaitForChild("Fishing").ClientModule.FishingGame)
+local CurrentLocalPlayerFishingModule = require(ACTIVE:WaitForChild("Fishing", 99999999999).ClientModule.FishingGame)
 
 --  functions
 
