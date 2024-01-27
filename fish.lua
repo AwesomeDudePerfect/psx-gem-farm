@@ -108,8 +108,6 @@ while task.wait(1) do
                 repeat
                     NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
                 until not getLocalPlayerRod():WaitForChild("FishingLine")
-                waitForLocalPlayerGameState(true)
-                waitForLocalPlayerGameState(false)
             end
 
             repeat
