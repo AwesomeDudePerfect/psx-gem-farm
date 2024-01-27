@@ -62,7 +62,29 @@ local function getMonkeyRod()
 end
 
 local function getMonkeyBubbles(anchor)
-    -- Implementation remains the same
+    local myBobber = nil
+    local myBubbles = false
+    local closestBobber = math.huge
+
+    for _, v in pairs(ActiveMonkeys.AdvancedFishing.Bobbers:GetChildren()) do
+        local distance = (v.Bobber.CFrame.Position - anchor.CFrame.Position).Magnitude
+
+        if distance <= closestBobber then
+            myBobber = v.Bobber
+            closestBobber = distance
+        end
+    end
+
+    if myBobber then
+        for _, v in pairs(MonkeyDebris:GetChildren()) do
+            if v.Name == "host" and v:FindFirstChild("Attachment") and (v.Attachment:FindFirstChild("Bubbles") or v.Attachment:FindFirstChild("Rare Bubbles")) and (v.CFrame.Position - myBobber.CFrame.Position).Magnitude <= 1 then
+                myBubbles = true
+                break
+            end
+        end
+    end
+
+    return myBubbles
 end
 
 local function jumpToServer()
