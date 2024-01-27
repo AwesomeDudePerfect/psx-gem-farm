@@ -127,6 +127,7 @@ end
 game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
 
 --low cpu nigga optimizer
+game:GetService("RunService"):Set3dRenderingEnabled(false)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
 --auto recon
