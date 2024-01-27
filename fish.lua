@@ -106,6 +106,7 @@ while task.wait(1) do
 
             if getLocalPlayerRod():WaitForChild("FishingLine") then
                 repeat
+		    task.wait(0.1)
                     NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
                 until not getLocalPlayerRod():WaitForChild("FishingLine")
             end
