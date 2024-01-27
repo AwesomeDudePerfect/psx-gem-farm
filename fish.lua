@@ -28,9 +28,7 @@ local function teleportToFishingSite()
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer(unpack({[1] = "Cloud Forest"}))
     wait(10)
     local tpAdvancedFishing = game:GetService("Workspace"):WaitForChild("__THINGS"):WaitForChild("Instances"):WaitForChild("AdvancedFishing").Teleports.Enter
-    print(HRP.CFrame)
-    print(tpAdvancedFishing.CFrame)
-    HRP.CFrame = tpAdvancedFishing.CFrame
+    LocalPlayer.Character.HumanoidRootPart.CFrame = tpAdvancedFishing.CFrame
 end
 
 if #ACTIVE:GetChildren() == 0 then
