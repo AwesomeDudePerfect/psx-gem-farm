@@ -22,7 +22,7 @@ local MonkeyFishingGame = Monkey:WaitForChild("PlayerGui"):WaitForChild("_INSTAN
 local function teleportToFishingSite()
     -- Teleport the player to the fishing site
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer("Cloud Forest")
-    wait(15)
+    wait(20)
     Monkey.Character.HumanoidRootPart.CFrame = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
 end
 
