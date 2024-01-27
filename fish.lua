@@ -72,7 +72,7 @@ local function getLocalPlayerBubbles(anchor)
     local myBubbles = false
     local closestBobber = math.huge
 
-    for _, v in pairs(ACTIVE.Fishing.Bobbers:GetChildren()) do
+    for _, v in pairs(ACTIVE.AdvancedFishing.Bobbers:GetChildren()) do
         local distance = (v.Bobber.CFrame.Position - anchor.CFrame.Position).Magnitude
 
         if distance <= closestBobber then
