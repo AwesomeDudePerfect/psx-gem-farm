@@ -28,7 +28,7 @@ local function teleportToFishingSite()
 end
 
 -- Check if there are active fishing instances; if not, teleport the player to the fishing site
-if #ACTIVE:GetChildren() == 0 then
+if #ActiveMonkeys:GetChildren() == 0 then
     teleportToFishingSite()
 else
     print('nah')
