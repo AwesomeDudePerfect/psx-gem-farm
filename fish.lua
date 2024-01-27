@@ -17,7 +17,6 @@ local MonkeyDebris = Jungle:WaitForChild("__DEBRIS")
 local MonkeyNetwork = BananaStorage:WaitForChild("Network")
 local OldMonkeyHooks = {}
 local MonkeyFishingGame = Monkey:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
-local CurrentMonkeyFishingModule = require(MonkeyHabitat.__INSTANCE_CONTAINER.Active:WaitForChild("AdvancedFishing").ClientModule.FishingGame)
 
 -- Define a function to teleport the player to the fishing site
 local function teleportToFishingSite()
@@ -33,6 +32,8 @@ if #ActiveMonkeys:GetChildren() == 0 then
 else
     print('nah')
 end
+
+local CurrentMonkeyFishingModule = require(MonkeyHabitat.__INSTANCE_CONTAINER.Active:WaitForChild("AdvancedFishing").ClientModule.FishingGame)
 
 --  functions
 
