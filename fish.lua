@@ -1,27 +1,37 @@
-repeat wait() until game:IsLoaded() and game.PlaceId ~= nil
-
 -- Services
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
--- Monkey data
-local LocalPlayer = Players.LocalPlayer
-local MonkeyHabitat = Workspace:WaitForChild("__THINGS")
-local ActiveMonkeys = MonkeyHabitat:WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active")
-local MonkeyDebris = Workspace:WaitForChild("__DEBRIS")
-local MonkeyNetwork = ReplicatedStorage:WaitForChild("Network")
-local FishingGame = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
+local HttpService = game:GetService("HttpService")
+local GuiService = game:GetService("GuiService")
 
 -- Constants
 local TELEPORT_DELAY = 20
-local FISHING_SITE = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
+local FISHING_SITE = Workspace.__THINGS.Instances.AdvancedFishing.Teleports.Enter.CFrame
 local FISHING_INSTANCE = "AdvancedFishing"
+local SERVER_URL_FORMAT = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s"
+local MAX_PLAYERS_PER_SERVER = 10
 
--- Functions
+-- Monkey data
+local LocalPlayer = Players.LocalPlayer
+local MonkeyHabitat = Workspace.__THINGS
+local ActiveMonkeys = MonkeyHabitat.__INSTANCE_CONTAINER.Active
+local MonkeyDebris = Workspace.__DEBRIS
+local MonkeyNetwork = ReplicatedStorage.Network
+
+-- Monkey fishing game module
+local MonkeyFishingGame = LocalPlayer.PlayerGui._INSTANCES.FishingGame.GameBar
+local CurrentMonkeyFishingModule = require(MonkeyHabitat.Active.AdvancedFishing.ClientModule.FishingGame)
+local OldMonkeyHooks = {}
+
+-- Check if the game is loaded and place ID is available
+repeat wait() until game:IsLoaded() and game.PlaceId ~= nil
+
+-- Function to teleport the player to the fishing site
 local function teleportToFishingSite()
-    MonkeyNetwork.Teleports_RequestTeleport:InvokeServer("Cloud Forest")
+    local TeleportService = ReplicatedStorage.Network.Teleports_RequestTeleport
+    TeleportService:InvokeServer("Cloud Forest")
     wait(TELEPORT_DELAY)
     LocalPlayer.Character.HumanoidRootPart.CFrame = FISHING_SITE
 end
@@ -30,27 +40,29 @@ end
 if #ActiveMonkeys:GetChildren() == 0 then
     teleportToFishingSite()
 else
-    print("nah")
+    print('nah')
 end
 
--- Game module manipulation
-local CurrentMonkeyFishingModule = require(MonkeyHabitat.__INSTANCE_CONTAINER.Active:WaitForChild("AdvancedFishing").ClientModule.FishingGame)
-local OldMonkeyHooks = table.move(CurrentMonkeyFishingModule, 1, #CurrentMonkeyFishingModule, 1, {})
+-- Save old hooks and redefine functions
+for i, v in pairs(CurrentMonkeyFishingModule) do
+    OldMonkeyHooks[i] = v
+end
 
--- Custom game functions
 CurrentMonkeyFishingModule.IsFishInBar = function()
     return math.random(1, 6) ~= 1
 end
 
 CurrentMonkeyFishingModule.StartGame = function(...)
-    return OldMonkeyHooks.StartGame(...) -- Ensure the original function is called
+    InGame = true
+    return OldMonkeyHooks.StartGame(...)
 end
 
 CurrentMonkeyFishingModule.StopGame = function(...)
-    return OldMonkeyHooks.StopGame(...) -- Ensure the original function is called
+    InGame = false
+    return OldMonkeyHooks.StopGame(...)
 end
 
--- Other functions
+-- Functions
 local function waitForMonkeyGameState(state)
     repeat
         RunService.RenderStepped:Wait()
@@ -88,59 +100,64 @@ local function getMonkeyBubbles(anchor)
 end
 
 local function jumpToServer()
-	repeat
-		local deep = math.random(1, 5)
-		local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s" 
-		local req = request({ Url = string.format(sfUrl, 8737899170, "Asc", 100) }) 
-		local body = http:JSONDecode(req.Body)
-		
-		if deep > 1 then
-	        for i = 1, deep, 1 do 
-	         	req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 8737899170, "Asc", 100) }) 
-	         	body = http:JSONDecode(req.Body) 
-	        	task.wait(0.1)
-	        end
-		end
-	
-	    local servers = {}
-	    if body and body.data then
-	        for i, v in next, body.data do
-	    	    if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < 10 and v.id ~= game.JobId then
-	            	table.insert(servers, v.id)
-	        	end
-	        end
-	    end
-	
-	    local randomCount = #servers
-	    if not randomCount then
-			randomCount = 2
-	    end
-    	ts:TeleportToPlaceInstance(8737899170, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer)
-	until game.JobId ~= game.JobId
+    repeat
+        local deep = math.random(1, 5)
+        local url = string.format(SERVER_URL_FORMAT, game.PlaceId, "Asc", 100)
+        local response = HttpService:GetAsync(url)
+        local data = HttpService:JSONDecode(response)
+
+        if deep > 1 then
+            for i = 1, deep, 1 do
+                response = HttpService:GetAsync(url .. "&cursor=" .. data.nextPageCursor)
+                data = HttpService:JSONDecode(response)
+                wait(0.1)
+            end
+        end
+
+        local servers = {}
+        if data and data.data then
+            for i, v in ipairs(data.data) do
+                if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < MAX_PLAYERS_PER_SERVER and v.id ~= game.JobId then
+                    table.insert(servers, v.id)
+                end
+            end
+        end
+
+        local randomCount = #servers
+        if not randomCount then
+            randomCount = 2
+        end
+
+        local TeleportService = ReplicatedStorage.Network.ts
+        TeleportService:TeleportToPlaceInstance(8737899170, servers[math.random(1, randomCount)], Players.LocalPlayer)
+    until game.JobId ~= game.JobId
 end
 
 -- Anti-AFK
-LocalPlayer.Idled:Connect(function()
+Players.LocalPlayer.Idled:Connect(function()
     game.VirtualUser:CaptureController()
     game.VirtualUser:ClickButton2(Vector2.new())
 end)
+Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
 
--- Low CPU optimization
+-- Low CPU optimizer
 RunService:Set3dRenderingEnabled(false)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
 -- Auto-reconnect
-game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-    jumpToServer()
-    LocalPlayer:Kick("Found An Error, Reconnecting...")
-    print("Found An Error, Reonnecting...")
-    wait(0.1)
+task.spawn(function()
+    GuiService.ErrorMessageChanged:Connect(function()
+        jumpToServer()
+        Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
+        print("Found An Error, Reonnecting...")
+        wait(0.1)
+    end)
 end)
 
 -- Main loop
 while true do
     pcall(function()
-        local fishingInstance = ActiveMonkeys:FindFirstChild(FISHING_INSTANCE)
+        local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild(FISHING_INSTANCE)
         if fishingInstance and not InGame then
             MonkeyNetwork.Instancing_FireCustomFromClient:FireServer(FISHING_INSTANCE, "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
 
