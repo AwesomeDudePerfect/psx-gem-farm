@@ -97,7 +97,7 @@ while task.wait(1) do
     pcall(function()
         local fishingInstance = THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
         if fishingInstance and not InGame then
-            NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1473 + math.random(10), 61, -4454 + math.random(10)))
+            NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
 
             local myAnchor = getLocalPlayerRod():WaitForChild("FishingLine").Attachment0
             repeat
