@@ -112,10 +112,9 @@ while task.wait(1) do
 
             if getLocalPlayerRod():WaitForChild("FishingLine") then
                 -- Continuously reel in the fishing line until it disappears
-                while getLocalPlayerRod():WaitForChild("FishingLine") do
-                    NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
-                    task.wait(0.2)  -- Adjust the wait time as needed
-                end
+                NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
+                waitForMonkeyGameState(true)
+                waitForMonkeyGameState(false)
             end
 
             -- Wait until the bobber becomes visible
