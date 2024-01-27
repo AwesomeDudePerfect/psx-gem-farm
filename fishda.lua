@@ -1,6 +1,4 @@
-repeat
-    wait()
-until game:IsLoaded()
+repeat wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
