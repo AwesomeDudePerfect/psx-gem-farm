@@ -1,21 +1,23 @@
--- Wait until the game is fully loaded and the PlaceId is not nil
-repeat task.wait() until game:IsLoaded() and game.PlaceId ~= nil
+repeat wait() until game:IsLoaded() and game.PlaceId ~= nil
 
--- Get essential Roblox services
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+-- services shit
 
--- Set up variables and constants
+local Chimpanzees = game:GetService("Players")
+local Jungle = game:GetService("Workspace")
+local TreeClimbingService = game:GetService("RunService")
+local BananaStorage = game:GetService("ReplicatedStorage")
+
+-- monkey type shit
+
 local InGame = false
-local LocalPlayer = Players.LocalPlayer
-local THINGS = Workspace:WaitForChild("__THINGS")
-local ACTIVE = THINGS:WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active")
-local DEBRIS = Workspace:WaitForChild("__DEBRIS")
-local NETWORK = ReplicatedStorage:WaitForChild("Network")
-local OldLocalPlayerHooks = {}
-local LocalPlayerFishingGame = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
+local Monkey = Chimpanzees.LocalPlayer
+local MonkeyHabitat = Jungle:WaitForChild("__THINGS")
+local ActiveMonkeys = MonkeyHabitat:WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active")
+local MonkeyDebris = Jungle:WaitForChild("__DEBRIS")
+local MonkeyNetwork = BananaStorage:WaitForChild("Network")
+local OldMonkeyHooks = {}
+local MonkeyFishingGame = Monkey:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
+local CurrentMonkeyFishingModule = require(MonkeyHabitat.__INSTANCE_CONTAINER.Active:WaitForChild("AdvancedFishing").ClientModule.FishingGame)
 
 -- Define a function to teleport the player to the fishing site
 local function teleportToFishingSite()
@@ -32,50 +34,42 @@ else
     print('nah')
 end
 
--- Fetch the current fishing module
-local CurrentLocalPlayerFishingModule = require(ACTIVE.AdvancedFishing.ClientModule.FishingGame)
+--  functions
 
--- Save existing hooks for later use
-for i, v in pairs(CurrentLocalPlayerFishingModule) do
-    OldLocalPlayerHooks[i] = v
+for i, v in pairs(CurrentMonkeyFishingModule) do
+    OldMonkeyHooks[i] = v
 end
 
--- Override the IsFishInBar function
-CurrentLocalPlayerFishingModule.IsFishInBar = function()
+CurrentMonkeyFishingModule.IsFishInBar = function()
     return math.random(1, 6) ~= 1
 end
 
--- Override the StartGame function
-CurrentLocalPlayerFishingModule.StartGame = function(...)
+CurrentMonkeyFishingModule.StartGame = function(...)
     InGame = true
-    return OldLocalPlayerHooks.StartGame(...)
+    return OldMonkeyHooks.StartGame(...)
 end
 
--- Override the StopGame function
-CurrentLocalPlayerFishingModule.StopGame = function(...)
+CurrentMonkeyFishingModule.StopGame = function(...)
     InGame = false
-    return OldLocalPlayerHooks.StopGame(...)
+    return OldMonkeyHooks.StopGame(...)
 end
 
--- Function to wait for the local player game state
-local function waitForLocalPlayerGameState(state)
+local function waitForMonkeyGameState(state)
     repeat
-        RunService.RenderStepped:Wait()
+        TreeClimbingService.RenderStepped:Wait()
     until InGame == state
 end
 
--- Function to get the local player's rod
-local function getLocalPlayerRod()
-    return LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Rod", true)
+local function getMonkeyRod()
+    return Monkey.Character and Monkey.Character:FindFirstChild("Rod", true)
 end
 
--- Function to check for bubbles around the player's rod
-local function getLocalPlayerBubbles(anchor)
+local function getMonkeyBubbles(anchor)
     local myBobber = nil
     local myBubbles = false
     local closestBobber = math.huge
 
-    for _, v in pairs(ACTIVE.AdvancedFishing.Bobbers:GetChildren()) do
+    for _, v in pairs(ActiveMonkeys.AdvancedFishing.Bobbers:GetChildren()) do
         local distance = (v.Bobber.CFrame.Position - anchor.CFrame.Position).Magnitude
 
         if distance <= closestBobber then
@@ -85,7 +79,7 @@ local function getLocalPlayerBubbles(anchor)
     end
 
     if myBobber then
-        for _, v in pairs(DEBRIS:GetChildren()) do
+        for _, v in pairs(MonkeyDebris:GetChildren()) do
             if v.Name == "host" and v:FindFirstChild("Attachment") and (v.Attachment:FindFirstChild("Bubbles") or v.Attachment:FindFirstChild("Rare Bubbles")) and (v.CFrame.Position - myBobber.CFrame.Position).Magnitude <= 1 then
                 myBubbles = true
                 break
@@ -96,31 +90,34 @@ local function getLocalPlayerBubbles(anchor)
     return myBubbles
 end
 
--- Main loop
+--anti afk shit
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
+
+--low cpu nigga optimizer
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
+
 while task.wait(1) do
     pcall(function()
-        local fishingInstance = THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
+        local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
         if fishingInstance and not InGame then
-            -- Request to cast the fishing line
-            NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
+            MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
 
-            local myAnchor = getLocalPlayerRod():WaitForChild("FishingLine").Attachment0
-            -- Wait for bubbles or game start
+            local myAnchor = getMonkeyRod():WaitForChild("FishingLine").Attachment0
             repeat
-                RunService.RenderStepped:Wait()
-            until not ACTIVE:FindFirstChild("AdvancedFishing") or (myAnchor and getLocalPlayerBubbles(myAnchor)) or InGame
+                TreeClimbingService.RenderStepped:Wait()
+            until not ActiveMonkeys:FindFirstChild("AdvancedFishing") or (myAnchor and getMonkeyBubbles(myAnchor)) or InGame
 
-            if getLocalPlayerRod():WaitForChild("FishingLine") then
-                -- Continuously reel in the fishing line until it disappears
-                NETWORK.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
-                waitForMonkeyGameState(true)
-                waitForMonkeyGameState(false)
+            if ActiveMonkeys:FindFirstChild("AdvancedFishing") then
+				repeat
+					task.wait()
+					MonkeyNetwork.Instancing_InvokeCustomFromClient:InvokeServer("AdvancedFishing", "Clicked")
+					MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
+				until getMonkeyRod():FindFirstChild("FishingLine") == nil
             end
 
-            -- Wait until the bobber becomes visible
             repeat
-                RunService.RenderStepped:Wait()
-            until getLocalPlayerRod() and getLocalPlayerRod().Parent.Bobber.Transparency <= 0
+                TreeClimbingService.RenderStepped:Wait()
+            until not ActiveMonkeys:FindFirstChild("AdvancedFishing") or (getMonkeyRod() and getMonkeyRod().Parent.Bobber.Transparency <= 0)
         end
     end)
 end
