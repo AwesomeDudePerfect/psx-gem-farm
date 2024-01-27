@@ -23,7 +23,7 @@ local function teleportToFishingSite()
     -- Teleport the player to the fishing site
     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer("Cloud Forest")
     wait(10)
-    LocalPlayer.Character.HumanoidRootPart.CFrame = THINGS.Instances.AdvancedFishing.Teleports.Enter.CFrame
+    Monkey.Character.HumanoidRootPart.CFrame = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
 end
 
 -- Check if there are active fishing instances; if not, teleport the player to the fishing site
