@@ -60,12 +60,6 @@ CurrentMonkeyFishingModule.StopGame = function(...)
     return OldMonkeyHooks.StopGame(...)
 end
 
-local function waitForMonkeyGameState(state)
-    repeat
-        TreeClimbingService.RenderStepped:Wait()
-    until InGame == state
-end
-
 local function getMonkeyRod()
     return Monkey.Character and Monkey.Character:FindFirstChild("Rod", true)
 end
