@@ -140,16 +140,6 @@ game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
---auto recon
-task.spawn(function()
-    game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-        jumpToServer() -- call your tp function here
-        game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
-        print("Found An Error, Reonnecting...")
-        wait(0.1)
-    end)
-end)
-
 while task.wait(1) do
     pcall(function()
         local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
