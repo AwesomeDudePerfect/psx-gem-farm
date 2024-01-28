@@ -143,7 +143,7 @@ while task.wait(1) do
             local myAnchor = getMonkeyRod():WaitForChild("FishingLine").Attachment0
             repeat
                 TreeClimbingService.RenderStepped:Wait()
-            until not ActiveMonkeys:FindFirstChild("AdvancedFishing") or (myAnchor and getMonkeyBubbles(myAnchor)) or InGame
+            until myAnchor and getMonkeyBubbles(myAnchor) or InGame
 
             if getMonkeyRod():FindFirstChild("FishingLine") then
 				repeat
