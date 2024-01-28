@@ -168,10 +168,6 @@ while task.wait(1) do
 					MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
 				until getMonkeyRod():FindFirstChild("FishingLine") == nil
             end
-
-            repeat
-                TreeClimbingService.RenderStepped:Wait()
-            until not ActiveMonkeys:FindFirstChild("AdvancedFishing") or (getMonkeyRod() and getMonkeyRod().Parent.Bobber.Transparency <= 0)
         end
     end)
 end
