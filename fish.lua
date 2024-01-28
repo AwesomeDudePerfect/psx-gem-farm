@@ -83,6 +83,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/ps
 
 while task.wait(1) do
     pcall(function()
+	task.wait()
         local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
         if fishingInstance then
             MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
