@@ -73,8 +73,7 @@ local function checkforDeepPool()
     local deepPool = ActiveMonkeys.AdvancedFishing.Interactable:GetDescendants()
     for _, descendant in pairs(deepPool) do
         if descendant:IsA("BasePart") and descendant.Name == "DeepPool" then
-            print(descendant.CFrame)
-            return descendant.Attachment.CFrame.Position.X, descendant.Attachment.CFrame.Position.Y, descendant.Attachment.CFrame.Position.Z
+            return descendant.CFrame.Position.X, descendant.CFrame.Position.Y, descendant.CFrame.Position.Z
         end
     end
 end
@@ -105,7 +104,7 @@ while task.wait(1) do
         local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
         if fishingInstance then
             local X, Y, Z = checkforDeepPool()
-            if X then
+            if X and Y and Z then
                 MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(X, Y, Z))
             else
                 MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
