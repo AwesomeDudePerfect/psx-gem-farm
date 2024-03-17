@@ -110,6 +110,7 @@ while task.wait(1) do
                 MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
             end
 
+            task.wait(1)
             local myAnchor = getMonkeyRod():WaitForChild("FishingLine").Attachment0
             repeat
                 TreeClimbingService.RenderStepped:Wait()
