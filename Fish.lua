@@ -15,8 +15,6 @@ local MonkeyHabitat = Jungle:WaitForChild("__THINGS")
 local ActiveMonkeys = MonkeyHabitat:WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active")
 local MonkeyDebris = Jungle:WaitForChild("__DEBRIS")
 local MonkeyNetwork = BananaStorage:WaitForChild("Network")
-local OldMonkeyHooks = {}
-local MonkeyFishingGame = Monkey:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
 
 -- Define a function to teleport the player to the fishing site
 local function teleportToFishingSite()
