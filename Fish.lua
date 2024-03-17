@@ -70,7 +70,7 @@ local function getMonkeyBubbles(anchor)
 end
 
 local function checkforDeepPool()
-    local deepPool = interactable:GetDescendants()
+    local deepPool = ActiveMonkeys.AdvancedFishing.Interactable:GetDescendants()
     for _, descendant in pairs(deepPool) do
         if descendant:IsA("BasePart") and descendant.Name == "DeepPool" then
             print(descendant.CFrame)
