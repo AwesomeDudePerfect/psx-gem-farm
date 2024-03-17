@@ -92,9 +92,11 @@ local niggaJump = coroutine.create(function ()
 end)
 coroutine.resume(niggaJump)
 
+
 --low cpu nigga optimizer
-game:GetService("RunService"):Set3dRenderingEnabled(false)
 setfpscap(15)
+--game:GetService("RunService"):Set3dRenderingEnabled(false)
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
 while task.wait(1) do
     pcall(function()
