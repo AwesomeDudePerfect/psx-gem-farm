@@ -74,7 +74,7 @@ local function checkforDeepPool()
     for _, descendant in pairs(deepPool) do
         if descendant:IsA("BasePart") and descendant.Name == "DeepPool" then
             print(descendant.CFrame)
-            return descendant.CFrame
+            return descendant.Attachment.CFrame
         end
     end
 end
@@ -96,8 +96,8 @@ end)
 coroutine.resume(niggaJump)
 
 --low cpu nigga optimizer
-game:GetService("RunService"):Set3dRenderingEnabled(false)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
+--game:GetService("RunService"):Set3dRenderingEnabled(false)
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
 while task.wait(1) do
     pcall(function()
