@@ -102,6 +102,7 @@ while task.wait(1) do
     pcall(function()
 	task.wait()
         local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
+        task.wait()
         if fishingInstance then
             local X, Y, Z = checkforDeepPool()
             if X and Y and Z then
