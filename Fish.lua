@@ -105,6 +105,7 @@ while task.wait(1) do
         local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
         if fishingInstance then
             local deepPool = checkforDeepPool() or false
+            print(deepPool)
             if deepPool then
                 MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(deepPool))
             else
