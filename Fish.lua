@@ -82,8 +82,8 @@ game:service'Players'.LocalPlayer.Idled:connect(function()
 VirtualUser:CaptureController()
 VirtualUser:ClickButton2(Vector2.new())
 end)
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
 local niggaJump = coroutine.create(function ()
     while 1 do
         wait(5)
