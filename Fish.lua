@@ -74,7 +74,7 @@ local function checkforDeepPool()
     for _, descendant in pairs(deepPool) do
         if descendant:IsA("BasePart") and descendant.Name == "DeepPool" then
             print(descendant.CFrame)
-            return descendant.Attachment.CFrame
+            return descendant.Attachment.CFrame.Position.X, descendant.Attachment.CFrame.Position.Y, descendant.Attachment.CFrame.Position.Z
         end
     end
 end
@@ -104,10 +104,9 @@ while task.wait(1) do
 	task.wait()
         local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
         if fishingInstance then
-            local deepPool = checkforDeepPool() or false
-            print(deepPool)
-            if deepPool then
-                MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(deepPool))
+            local X, Y, Z = checkforDeepPool()
+            if X then
+                MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(X, Y, Z))
             else
                 MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
             end
