@@ -78,6 +78,7 @@ end
 
 --anti afk shit
 --since i dont have the shit for preston's new afk system shit
+wait(10)
 getgenv().temporaryDomain = true
 getgenv().LoadSettings = {
     Example_Setting = Example_Value
