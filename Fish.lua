@@ -77,13 +77,22 @@ local function checkforDeepPool()
 end
 
 --anti afk shit
-local VirtualUser=game:service'VirtualUser'
-game:service'Players'.LocalPlayer.Idled:connect(function()
-VirtualUser:CaptureController()
-VirtualUser:ClickButton2(Vector2.new())
+wait(10)
+local Players = game:GetService('Players')
+local Player = Players.LocalPlayer
+local getPlayers = Players:GetPlayers()
+local PlayerInServer = #getPlayers
+local http = game:GetService("HttpService")
+local vu = game:GetService("VirtualUser")
+print("Anti AFKEY")
+
+Players.LocalPlayer.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
 end)
-game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
-game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
+game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
 local niggaJump = coroutine.create(function ()
     while 1 do
         wait(5)
@@ -91,7 +100,6 @@ local niggaJump = coroutine.create(function ()
     end
 end)
 coroutine.resume(niggaJump)
-
 
 --low cpu nigga optimizer
 setfpscap(15)
