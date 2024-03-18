@@ -9,7 +9,7 @@ local BananaStorage = game:GetService("ReplicatedStorage")
 
 -- monkey type shit
 
-local InGame = false
+local myAnchor
 local Monkey = Chimpanzees.LocalPlayer
 local MonkeyHabitat = Jungle:WaitForChild("__THINGS")
 local ActiveMonkeys = MonkeyHabitat:WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active")
@@ -120,7 +120,10 @@ while task.wait(1) do
             end
 
             task.wait(1)
-            local myAnchor = getMonkeyRod():WaitForChild("FishingLine").Attachment0
+            repeat
+                TreeClimbingService.RenderStepped:Wait()
+                myAnchor = getMonkeyRod():FindFirstChild("FishingLine").Attachment0
+            until myAnchor ~= nil
             repeat
                 TreeClimbingService.RenderStepped:Wait()
             until getMonkeyBubbles(myAnchor)
