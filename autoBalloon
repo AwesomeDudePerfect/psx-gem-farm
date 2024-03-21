@@ -103,23 +103,7 @@ if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 		end)
 	end)
 
-	for i,v in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do
-		if v:IsA("ScreenGui") then
-			v.Enabled = false
-		end
-	end
-
-	for i, v in pairs(game:GetService("StarterGui"):GetChildren()) do
-		if v:IsA("ScreenGui") then
-			v.Enabled = false
-		end
-	end
-
-	for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
-		if v:IsA("ScreenGui") then
-			v.Enabled = false
-		end
-	end
+    game:GetService("RunService"):Set3dRenderingEnabled(false)
 	setfpscap(8)
 end	
 local LargeRAP = 11000; local SmallRAP = 2800
@@ -157,11 +141,32 @@ function getBalloonUID(zoneName)
 		end
 	end
 end
-function getServer()
-	local servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Asc&limit=100')).data
-	local server = servers[Random.new():NextInteger(1, 100)]
-	if server then return server else return getServer() end
-end
+local function jumpToServer()
+    local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true" 
+    local req = request({ Url = string.format(sfUrl, 15502339080, "Desc", 50) }) 
+    local body = game:GetService("HttpService"):JSONDecode(req.Body) 
+    local deep = math.random(5, 10)
+    if deep > 1 then 
+        for i = 1, deep, 1 do 
+            req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 15502339080, "Desc", 50) }) 
+            body = game:GetService("HttpService"):JSONDecode(req.Body) 
+            task.wait(0.1)
+        end 
+    end 
+    local servers = {} 
+    if body and body.data then 
+        for i, v in next, body.data do 
+                if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
+                    table.insert(servers, 1, v.id)
+                end
+            end
+        end
+        local randomCount = #servers
+        if not randomCount then
+            randomCount = 2
+        end
+        game:GetService("TeleportService"):TeleportToPlaceInstance(15502339080, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer) 
+    end
 function getPresents() for i,v in pairs(Library.Save.Get().HiddenPresents) do 
 		if not v.Found and v.ID then 
 			local success,reason = Library.Network.Invoke("Hidden Presents: Found", v.ID) 
@@ -210,7 +215,7 @@ autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(
 end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
 if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
-	repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
+	repeat jumpToServer() task.wait(3) until not game.PlaceId
 end
 local startGifts = 0
 local startLarge = 0
@@ -258,7 +263,7 @@ while getgenv().MoneyPrinter.autoBalloons do task.wait()
 			if getgenv().MoneyPrinter.sendWeb then
 				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
 			end
-			repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
+			repeat jumpToServer() task.wait(3) until not game.PlaceId
 		end
 	end
 end
