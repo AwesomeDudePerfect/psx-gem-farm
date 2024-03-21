@@ -246,6 +246,10 @@ for i,v in pairs(getInfo("Inventory").Misc) do
 	end
 end
 local startTime = os.time()
+task.spawn(function()
+	wait(1140)
+	repeat jumpToServer() task.wait(3) until not game.PlaceId
+end)
 while getgenv().MoneyPrinter.autoBalloons do task.wait()
 	if getgenv().MoneyPrinter.autoPresents then getPresents() end
 	for _,Balloon in pairs(Library.Network.Invoke("BalloonGifts_GetActiveBalloons")) do task.wait(0.03)
