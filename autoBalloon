@@ -103,7 +103,24 @@ if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 		end)
 	end)
 
-    game:GetService("RunService"):Set3dRenderingEnabled(false)
+	for i,v in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do
+		if v:IsA("ScreenGui") then
+			v.Enabled = false
+		end
+	end
+
+	for i, v in pairs(game:GetService("StarterGui"):GetChildren()) do
+		if v:IsA("ScreenGui") then
+			v.Enabled = false
+		end
+	end
+
+	for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
+		if v:IsA("ScreenGui") then
+			v.Enabled = false
+		end
+	end
+    	game:GetService("RunService"):Set3dRenderingEnabled(false)
 	setfpscap(8)
 end	
 local LargeRAP = 11000; local SmallRAP = 2800
