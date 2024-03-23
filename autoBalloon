@@ -77,6 +77,32 @@ if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 
 	game:GetService("Lighting"):ClearAllChildren()
 
+	for _, v in pairs(Workspace:GetDescendants()) do
+		clearTextures(v)
+	end
+
+	Workspace.DescendantAdded:Connect(function(v)
+		clearTextures(v)
+	end)
+
+	for _, v in pairs(game.Players:GetChildren()) do
+		for _, v2 in pairs(v.Character:GetDescendants()) do
+			if v2:IsA("BasePart") or v2:IsA("Decal") then
+				v2.Transparency = 1
+			end
+		end
+	end
+
+	game.Players.PlayerAdded:Connect(function(player)
+		player.CharacterAdded:Connect(function(character)
+			for _, v in pairs(character:GetDescendants()) do
+				if v:IsA("BasePart") or v:IsA("Decal") then
+					v.Transparency = 1
+				end
+			end
+		end)
+	end)
+
 	for i,v in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do
 		if v:IsA("ScreenGui") then
 			v.Enabled = false
