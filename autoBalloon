@@ -139,9 +139,13 @@ local function jumpToServer()
     local body = game:GetService("HttpService"):JSONDecode(req.Body) 
     deep = math.random(15,29)
     if deep > 1 then 
-        for i = 1, deep, 1 do 
+        for i = 1, deep, 1 do
+	    if body == nil then
+		print('cursor is nil')
+	    	body.nextPageCursor = "eyJzdGFydEluZGV4IjoxMDAsImRpc2NyaW1pbmF0b3IiOiJwbGFjZUlkOjg3Mzc4OTkxNzBzZXJ2ZXJUeXBlOlB1YmxpYyIsImNvdW50IjoxMDB9CjllOTRmYjBmMzYyZGUyYzJhYTVhNmE3MDU2MmI0YTdjOWJkZTk3ZTQ0MDI2ZGM3YTUyY2U4NTI3ZWZkMDk2Mjk="
+	    end
             req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 8737899170, "Desc", 100) }) 
-            body = game:GetService("HttpService"):JSONDecode(req.Body) 
+            body = game:GetService("HttpService"):JSONDecode(req.Body)
             task.wait(0.1)
         end 
     end 
