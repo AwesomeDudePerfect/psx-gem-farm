@@ -203,6 +203,7 @@ autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(
 end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
 if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
+	print('server is empty!')
 	repeat jumpToServer() task.wait(3) until not game.PlaceId
 end
 local startGifts = 0
