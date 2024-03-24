@@ -240,7 +240,7 @@ end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
 if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
 	print('server is empty!')
-	repeat Jump("Normal") task.wait(3) until not game.PlaceId
+	Jump("Normal")
 end
 local startGifts = 0
 local startLarge = 0
@@ -255,7 +255,7 @@ end
 local startTime = os.time()
 task.spawn(function()
 	wait(1140)
-	repeat Jump("Normal") task.wait(3) until not game.PlaceId
+	Jump("Normal")
 end)
 while getgenv().MoneyPrinter.autoBalloons do task.wait()
 	if getgenv().MoneyPrinter.autoPresents then getPresents() end
@@ -295,7 +295,7 @@ while getgenv().MoneyPrinter.autoBalloons do task.wait()
 				print(getTotalRAP(totalValue))
 				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons \n- total value: "..tostring(getTotalRAP(totalValue)).." :gem: \n```")
 			end
-			repeat Jump("Normal") task.wait(3) until not game.PlaceId
+			Jump("Normal")
 		end
 	end
 end
