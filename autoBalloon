@@ -135,7 +135,7 @@ local function jumpToServer()
 		print('cursor is nil')
 	    	body.nextPageCursor = "eyJzdGFydEluZGV4IjoxMDAsImRpc2NyaW1pbmF0b3IiOiJwbGFjZUlkOjg3Mzc4OTkxNzBzZXJ2ZXJUeXBlOlB1YmxpYyIsImNvdW50IjoxMDB9CjllOTRmYjBmMzYyZGUyYzJhYTVhNmE3MDU2MmI0YTdjOWJkZTk3ZTQ0MDI2ZGM3YTUyY2U4NTI3ZWZkMDk2Mjk="
 	    end
-            req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 8737899170, "Desc", 100) }) 
+            req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 8737899170, "Asc", 100) }) 
             body = game:GetService("HttpService"):JSONDecode(req.Body)
             task.wait(0.1)
         end 
