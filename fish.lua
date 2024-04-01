@@ -1,105 +1,556 @@
-repeat wait() until game:IsLoaded() and game.PlaceId ~= nil
-
--- services shit
-
-local Chimpanzees = game:GetService("Players")
-local Jungle = game:GetService("Workspace")
-local TreeClimbingService = game:GetService("RunService")
-local BananaStorage = game:GetService("ReplicatedStorage")
-
--- monkey type shit
-
-local InGame = false
-local Monkey = Chimpanzees.LocalPlayer
-local MonkeyHabitat = Jungle:WaitForChild("__THINGS")
-local ActiveMonkeys = MonkeyHabitat:WaitForChild("__INSTANCE_CONTAINER"):WaitForChild("Active")
-local MonkeyDebris = Jungle:WaitForChild("__DEBRIS")
-local MonkeyNetwork = BananaStorage:WaitForChild("Network")
-local OldMonkeyHooks = {}
-local MonkeyFishingGame = Monkey:WaitForChild("PlayerGui"):WaitForChild("_INSTANCES").FishingGame.GameBar
-
--- Define a function to teleport the player to the fishing site
-local function teleportToFishingSite()
-    -- Teleport the player to the fishing site
-    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer("Cloud Forest")
-    wait(20)
-    Monkey.Character.HumanoidRootPart.CFrame = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
-	if #ActiveMonkeys:GetChildren() >= 1 then
-		print('Successful tp to site')
-	elseif #ActiveMonkeys:GetChildren() == 0 then
-		Monkey.Character.HumanoidRootPart.CFrame = MonkeyHabitat.Instances.AdvancedFishing.Teleports.Enter.CFrame
-	end
+-- CTE HUB AUTO FISHING ULTRA BOOST FPS
+if not getgenv().Config then 
+    getgenv().Config = {
+        StandInSecretPlace = true, -- Make your character stand in secret place that dev cant find (CTE ON TOP)
+        AutoSendMail = {
+            Gem = {
+                Username = "",
+                MinToSend = 2000000,
+                Enabled = false
+            },
+            Shard = {
+                Username = "",
+                Enabled = false,
+                MinToSend = 50
+            },
+            Huge = {
+                Username = "",
+                Enabled = false
+            }
+        },
+        SendMailWebHook = ""
+       
+    }
 end
+print("cmm")
+repeat wait() until game:IsLoaded()
+repeat wait() until game.Players.LocalPlayer
+local plr = game.Players.LocalPlayer
+repeat wait() until plr.Character
+repeat wait() until plr.Character:FindFirstChild("HumanoidRootPart")
+repeat wait() until plr.Character:FindFirstChild("Humanoid")
+repeat wait() until workspace:FindFirstChild("__THINGS")
+repeat wait() until not plr.PlayerGui:FindFirstChild("__INTRO")
 
--- Check if there are active fishing instances; if not, teleport the player to the fishing site
-if #ActiveMonkeys:GetChildren() == 0 then
-    teleportToFishingSite()
-else
-    print('nah')
-end
-
---  functions
-local function getMonkeyRod()
-    return Monkey.Character and Monkey.Character:FindFirstChild("Rod", true)
-end
-
-local function getMonkeyBubbles(anchor)
-    local myBobber = nil
-    local myBubbles = false
-    local closestBobber = math.huge
-
-    for _, v in pairs(ActiveMonkeys.AdvancedFishing.Bobbers:GetChildren()) do
-        local distance = (v.Bobber.CFrame.Position - anchor.CFrame.Position).Magnitude
-
-        if distance <= closestBobber then
-            myBobber = v.Bobber
-            closestBobber = distance
-        end
+local vu = game:GetService("VirtualUser")
+plr.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+local old 
+old = hookmetamethod(game,"__namecall",(function(...) 
+    local self,arg = ...
+    if not checkcaller() then 
+        if getnamecallmethod() == "FireServer" and tostring(self) == "__BLUNDER" or tostring(self) == "Idle Tracking: Update Timer" or tostring(self) == "Move Server" then return end
     end
+    return old(...)
+end))
+game:GetService("ReplicatedStorage").Network:WaitForChild("Instancing_PlayerEnterInstance")
+game:GetService("ReplicatedStorage").Network:WaitForChild("New Stats")
 
-    if myBobber then
-        for _, v in pairs(MonkeyDebris:GetChildren()) do
-            if v.Name == "host" and v:FindFirstChild("Attachment") and (v.Attachment:FindFirstChild("Bubbles") or v.Attachment:FindFirstChild("Rare Bubbles")) and (v.CFrame.Position - myBobber.CFrame.Position).Magnitude <= 1 then
-                myBubbles = true
-                break
+function SendHookCT(ct,content)
+    local HttpService = game:GetService("HttpService")
+    local tb = {
+        ["content"] = content or "",
+        ["embeds"] = {{
+            ["title"] = "Pet Simulator 99",
+            ["description"] = "",
+            ["type"] = "rich",
+            ["color"] = tonumber(0xffb4b4),
+            ["fields"] = ct,
+            ["footer"] = {
+                ["icon_url"] = "https://media.discordapp.net/attachments/821058004178305044/1200079352667320401/roses.png",
+                ["text"] = "CTE Hub (" .. os.date("%X") .. ")"
+            }
+        }}
+    }
+    
+    local a =
+        request(
+        {
+            Url = getgenv().Config.SendMailWebHook,
+            Method = "POST",
+            Body = HttpService:JSONEncode(tb),
+            Headers = {
+                ["Content-Type"] = "application/json"
+            }
+        }
+    )
+    return a.Body
+end
+
+spawn(function() 
+    local SaveModule = require(game.ReplicatedStorage.Library.Client.Save)
+    local plr = game.Players.LocalPlayer
+    
+    
+    local function GetItem(name)
+        for i,v in SaveModule.GetSaves()[plr].Inventory do
+            for i2,v2 in next, v do 
+                if v2['id'] == name then
+                    return v2._am
+                end
+            end
+        end
+        return 0
+    end
+    function GetId(Info) 
+        local Type = Info.Type
+        if Info.Type then Info.Type = nil end
+        for i,v in SaveModule.GetSaves()[plr].Inventory do
+            if Type then 
+                if i == Type then 
+                    for i2, v2 in v do
+                        local AllInfoCorrect = true
+                        for k,v in Info do 
+                            if v2[k] ~= v then 
+                                AllInfoCorrect = false
+                                break
+                            end
+                        end
+                        if AllInfoCorrect then
+                            return {i, i2}, v._am
+                        end
+                    end
+                end
+            else
+                for i2, v2 in v do
+                    local AllInfoCorrect = true
+                    for k,v in Info do 
+                        if v2[k] ~= v then 
+                            AllInfoCorrect = false
+                            break
+                        end
+                    end
+                    if AllInfoCorrect then
+                        return {i, i2}
+                    end
+                end
             end
         end
     end
 
-    return myBubbles
-end
+    for k,v in getgenv().Config.AutoSendMail do 
+        if v.Enabled then 
+        
+        end
+    end
+    
+    
+    local function sendMail(username, message, item, amount)
+        
+        local itemTable,am = GetId(item)
+        if amount == -1 then 
+            amount = am
+        end
+        local a1, b1
+        local a,b = pcall(function()
+            local args = {
+                [1] = username,
+                [2] = message or username,
+                [3] = itemTable[1], -- Pet/Fruit/...
+                [4] = itemTable[2], -- Id
+                [5] = amount
+            }
+            a1, b1 = game: GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(unpack(args))
+        end)
+        if getgenv().SendGemWebhook then 
+            spawn(function() 
+                SendHookCT({
+                    {
+                        name = "Sent Item: " +message,
+                        value = tostring(amount),
+                        inline = false
+                    },
+                    {
+                        name = "Player",
+                        value = plr.Name,
+                        inline = false
+                    }
+                })
+            end)
+        end
 
---anti afk shit
-local VirtualUser=game:service'VirtualUser'
-game:service'Players'.LocalPlayer.Idled:connect(function()
-VirtualUser:CaptureController()
-VirtualUser:ClickButton2(Vector2.new())
+
+
+        if b or b1 then
+            warn('got error while sending mail',print(b,b1))
+        else
+            print('send mail success')
+        end
+    end
+    
+    
+    
+    local ListSendMail = {}
+    function AddToSend(...) 
+        table.insert(ListSendMail,{...})
+    end
+    for k,v in getgenv().Config.AutoSendMail do 
+        if v.Enabled and v.MinToSend and v.Username then 
+            if k == "Gem" then 
+                if game.Players.LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= v.MinToSend then 
+                    AddToSend(v.Username, "Sent Gem", {
+                        id = "Diamonds",
+                        Type = "Currency"
+                    }, game.Players.LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value - 20000)
+                end
+            end
+            if k == "Shard" then 
+                local Shard = 0
+                for i,v in SaveModule.GetSaves()[plr].Inventory.Misc do 
+                    if v.id == "Magic Shard" then 
+                        if v._am >= v.MinToSend then 
+                            AddToSend(v.Username, "Sent Shard", {
+                                id = "Magic Shard",
+                                Type = "Misc"
+                            }, v._am)
+                        end
+                    end
+                end
+            end
+            if k == "Huge" then 
+                for i,v in SaveModule.GetSaves()[plr].Inventory.Pet do 
+                    if string.match(v.id,"Huge") then 
+                        AddToSend(v.Username, "Sent Pet", {
+                            id = v.id,
+                            Type = "Pet"
+                        }, 1)
+                    end
+                end
+            end
+        end
+    end
+
+    
+    wait(60)
+    for k,v in ListSendMail do 
+        sendMail(unpack(v))
+    end
+    ListSendMail = {}
 end)
-game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
+local PlayerStats
+game:GetService("ReplicatedStorage").Network:WaitForChild("New Stats").OnClientEvent:Connect(function(data,plr) 
+    if tostring(plr) == game.Players.LocalPlayer.Name then 
+        PlayerStats = data
+    end
+end)
 
---low cpu nigga optimizer
+local plr = game.Players.LocalPlayer
+game:GetService("ReplicatedStorage").Network.Instancing_PlayerEnterInstance:InvokeServer("AdvancedFishing")
+game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer("AdvancedFishing","GetPlayersFishing")
+
+local pos = Vector3.new(1449, 61.625038146972656, -4409)
+function Tap() 
+    game:GetService("ReplicatedStorage").Network.Instancing_InvokeCustomFromClient:InvokeServer("AdvancedFishing","Clicked")
+end 
+
+pcall(function() 
+    local Lighting = game.Lighting
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9e9
+    Lighting.ShadowSoftness = 0
+    local Lighting = game.Lighting
+    for k,v in Lighting:GetChildren() do v:Destroy() end
+    sethiddenproperty(Lighting, "Technology", 2)
+    settings().Rendering.QualityLevel = 1
+    settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
+    for k,v in game:GetService("MaterialService"):GetChildren() do v:Destroy() end
+
+    --game:GetService("MaterialService").Use2022Materials = false
+    workspace.ALWAYS_RENDERING:Destroy()
+    
+end)
+
+
 game:GetService("RunService"):Set3dRenderingEnabled(false)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
 
-while task.wait(1) do
-    pcall(function()
-	task.wait()
-        local fishingInstance = MonkeyHabitat.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedFishing")
-        if fishingInstance then
-            MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestCast", Vector3.new(1465.7059326171875, 61.62495422363281, -4453.29052734375))
+function TPNormal(pos) 
+    pcall(function() 
+        plr.Character.HumanoidRootPart.CFrame = pos
+    end)
+end
+function Noclip()
+    for i, v in ipairs(plr.Character:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true then
+            v.CanCollide = false
+        end
+    end
+end
+game:GetService("RunService").Stepped:Connect(function()
+    if getgenv().noclip then
+        if plr.Character ~= nil then
+            Noclip()
+        end
+    end
+end)
+spawn(function() 
+    while wait() do
+        pcall(function()
+            if getgenv().noclip then 
+                if not plr.Character.HumanoidRootPart:FindFirstChild("Noclip") then 
+                    local BV = Instance.new('BodyVelocity')
+                    BV.Parent = plr.Character.HumanoidRootPart
+                    BV.Velocity = Vector3.new(0, 0, 0)
+                    BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                    BV.Name = "Noclip"
+                end
+                if not plr.Character.HumanoidRootPart:FindFirstChild("Noclip1") then 
+                    local BG = Instance.new('BodyGyro')
+                    BG.P = 9e4
+                    BG.Parent = plr.Character.HumanoidRootPart
+                    BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+                    BG.cframe = workspace.CurrentCamera.CoordinateFrame
+                    BG.Name = "Noclip1"
+                end
+                plr.Character.Humanoid.PlatformStand = true
+            else
+                if plr.Character.HumanoidRootPart:FindFirstChild("Noclip") then 
+                    plr.Character.HumanoidRootPart:FindFirstChild("Noclip"):Destroy()
+                end
+                plr.Character.Humanoid.PlatformStand = false
+                if plr.Character.HumanoidRootPart:FindFirstChild("Noclip1") then 
+                    plr.Character.HumanoidRootPart:FindFirstChild("Noclip1"):Destroy()
+                end
+            end
+        end)
+    end
+end)
+local CurrentShard = 0 
 
-            local myAnchor = getMonkeyRod():WaitForChild("FishingLine").Attachment0
-            repeat
-                TreeClimbingService.RenderStepped:Wait()
-            until getMonkeyBubbles(myAnchor)
-
-            if getMonkeyRod():FindFirstChild("FishingLine") then
-				repeat
-					task.wait()
-					MonkeyNetwork.Instancing_InvokeCustomFromClient:InvokeServer("AdvancedFishing", "Clicked")
-					MonkeyNetwork.Instancing_FireCustomFromClient:FireServer("AdvancedFishing", "RequestReel")
-				until getMonkeyRod():FindFirstChild("FishingLine") == nil
+local SaveModule = require(game.ReplicatedStorage.Library.Client.Save)
+local PlayerData = SaveModule:GetSaves()[plr]
+for k,v in PlayerData.Inventory.Misc do 
+    if string.match(v.id,"Shard") then 
+        CurrentShard = v._am
+        break;
+    end
+end
+getgenv().noclip = true
+if game.ReplicatedStorage.Network:WaitForChild("Instancing_FireCustomFromServer") then 
+    for k,v in workspace:GetChildren() do 
+        if v.Name ~= plr.Name and v.Name ~= "Camera"  then 
+            pcall(function() 
+                v:Destroy()
+            end)
+        end
+    end
+    if plr.PlayerScripts:FindFirstChild("Parallel Pet Actors") then 
+        plr.PlayerScripts:FindFirstChild("Parallel Pet Actors"):Destroy()
+    end
+    pcall(function() 
+        plr.PlayerScripts.Scripts:Destroy()
+    end)
+    pcall(function() 
+        for k,v in getrunningscripts() do pcall(function() v.Disabled = true end) v:Destroy() end
+    end)
+    pcall(function() 
+        for k,v in game:GetDescendants() do 
+            if v:IsA("RemoteEvent") then 
+                pcall(function() 
+                    for k,v in getconnections(v.OnClientEvent) do 
+                        if getfenv(v.Function).script ~= script then v:Disable() end
+                    end
+                end)
             end
         end
     end)
+    
+    for k,v in plr.PlayerGui:GetChildren() do 
+        v:Destroy()
+    end
+
+
+    local ScreenGui = Instance.new("ScreenGui")
+    local Frame = Instance.new("Frame")
+    local Frame_2 = Instance.new("Frame")
+    local TextLabel = Instance.new("TextLabel")
+    
+    --Properties:
+    
+    ScreenGui.Parent = game.CoreGui
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Name = "CTE Sech"
+    
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.BorderSizePixel = 0
+    Frame.Position = UDim2.new(0, 0, 0, -70)
+    Frame.Size = UDim2.new(1, 0, 1, 70)
+    
+    Frame_2.Parent = Frame
+    Frame_2.AnchorPoint = Vector2.new(0.5, 0.5)
+    Frame_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Frame_2.BackgroundTransparency = 1.000
+    Frame_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Frame_2.BorderSizePixel = 0
+    Frame_2.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Frame_2.Size = UDim2.new(0.75, 0, 0, 750)
+    
+    TextLabel.Parent = Frame_2
+    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TextLabel.BorderSizePixel = 0
+    TextLabel.Size = UDim2.new(1, 0, 1, 0)
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.Text = "a"
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextSize = 30.000
+    TextLabel.RichText = true
+    
+    
+    local TotalHuge = 0
+    spawn(function ()
+        if game.ReplicatedStorage.Network:WaitForChild("Items: Update") and game.ReplicatedStorage.Network:WaitForChild("Item Index: Add") then
+            game.ReplicatedStorage.Network["Items: Update"].OnClientEvent:Connect(function(...)
+                local Username, Data = ...
+                if tostring(Username) ~= game.Players.LocalPlayer.Name then 
+                    return
+                end
+                local IsUpdate = Data.set
+                
+                if IsUpdate  then
+                    if IsUpdate.Misc then
+                        for k,v in IsUpdate.Misc do
+                            if string.find(v.id,"Shard") then 
+                                CurrentShard = v._am
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+        game:GetService("ReplicatedStorage").Network["Item Index: Add"].OnClientEvent:Connect(function(v) 
+            --warn(v)
+            for k,v in v do 
+                for k,v in v do
+                    if string.match(v,"Huge") then 
+                        TotalHuge = TotalHuge + 1
+                    end
+                end
+            end
+        end)
+    end)
+    function format_int(number)
+
+        local i, j, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
+      
+        -- reverse the int-string and append a comma to all blocks of 3 digits
+        int = int:reverse():gsub("(%d%d%d)", "%1,")
+      
+        -- reverse the int-string back remove an optional comma and put the 
+        -- optional minus and fractional part back
+        return minus .. int:reverse():gsub("^,", "") .. fraction
+      end
+    local LastRemote = tick()
+    local NeedTap
+    local StartedLegend
+    local Status = ""
+    local OldDiamond = plr.leaderstats["\240\159\146\142 Diamonds"].Value
+    local TotalMin = 0
+    local TotalSec = 0
+    function disp_time(time)
+        local days = math.floor(time/86400)
+        local hours = math.floor(math.fmod(time, 86400)/3600)
+        local minutes = math.floor(math.fmod(time,3600)/60)
+        local seconds = math.floor(math.fmod(time,60))
+        return string.format("%d:%02d:%02d:%02d",days,hours,minutes,seconds)
+      end
+    
+    function SetStatus() 
+        --do return end
+        TextLabel.Text = [[<font color="rgb(255,180,180)">CTE</font> HUB AUTO FISHING ULTRA BOOST FPS
+        Status: <font color="rgb(51, 255, 122)"> ]]..Status..[[ </font>
+        Current Diamonds: <font color="rgb(69, 140, 255)">]]..format_int(plr.leaderstats["\240\159\146\142 Diamonds"].Value)..[[</font>
+        Current Shards: <font color="rgb(137, 41, 255)">]]..format_int(CurrentShard)..[[</font>
+        Diamond Per Mins: <font color="rgb(255, 207, 51)">]]..format_int(math.floor((plr.leaderstats["\240\159\146\142 Diamonds"].Value - OldDiamond) / math.floor((math.max(1,TotalSec/60)))))..[[</font>
+        Huge: <font color="rgb(255,180,180)">]]..TotalHuge..[[</font>
+        Total Time: <font color="rgb(137, 41, 255)">]]..disp_time(TotalSec)..[[</font>
+    ]]
+    end
+    game.ReplicatedStorage.Network.Instancing_FireCustomFromServer.OnClientEvent:Connect(function(...) 
+        local Zone,Cmd,plr,_,Type = ...
+        --print(...)
+        if Zone == "AdvancedFishing" then 
+            if tostring(plr) == game.Players.LocalPlayer.Name then 
+                if Cmd == "Hook" then 
+                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing","RequestReel")
+                        Status = "Reeling"
+                        NeedTap = false
+                        LastRemote = tick()
+                        StartedLegend = nil
+                    task.spawn(Tap)
+                    for i = 1,5 do 
+                        task.spawn(Tap)
+                    end
+                elseif Cmd == "FishingSuccess" then 
+                    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing","RequestCast",pos)
+                    NeedTap = false
+                    LastRemote = tick()
+                    StartedLegend = nil
+                    Status = "Casting"
+                end
+            end
+            if Cmd == "StartAttemptCatch" then
+                Status = "Tapping"
+                NeedTap = true
+                spawn(function() 
+                    while NeedTap do 
+                        task.spawn(Tap)
+                        task.spawn(Tap)
+                        task.spawn(Tap)
+                        task.wait()
+                    end
+                end)
+                LastRemote = tick()
+                StartedLegend = nil
+            end
+        end
+        LastCau = tick()
+        LastThaCanInLoop = tick()
+        SetStatus()
+    end)
+    if getgenv().Config.StandInSecretPlace then 
+        TPNormal(CFrame.new(0,1000000,0))
+    else
+        TPNormal(CFrame.new(1452.3446044921875, 70.48225402832031, -4431.96142578125))
+    end
+    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing","RequestReel")
+    game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing","RequestCast",pos)
+    
+    while true do 
+        SetStatus()
+        TotalSec = TotalSec + 1
+
+        if tick() - LastRemote > 60 then 
+            StartedLegend = nil
+            game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing","RequestReel")
+            game:GetService("ReplicatedStorage").Network.Instancing_FireCustomFromClient:FireServer("AdvancedFishing","RequestCast",pos)
+            LastRemote = tick()
+        end
+        
+        wait(1)
+        pcall(function() 
+            if #ListSendMail == 0 then 
+                for k,v in getgenv().Config.AutoSendMail do 
+                    if v.Enabled and v.MinToSend and v.Username then 
+                        if k == "Gem" then 
+                            if game.Players.LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= v.MinToSend then 
+                                game.Players.LocalPlayer:Kick()
+                            end
+                        end
+                        if k == "Shard" then 
+                            if CurrentShard >= v.MinToSend then game.Players.LocalPlayer:Kick() end
+                        end
+                        if k == "Huge" then 
+                            if TotalHuge > 0 then game.Players.LocalPlayer:Kick() end 
+                        end
+                    end
+                end
+            end
+        end)
+    end
 end
