@@ -50,12 +50,12 @@ local function clearTextures(v)
 end
 
 setfpscap(15)
-game:GetService("Lighting"):ClearAllChildren()
+--game:GetService("Lighting"):ClearAllChildren()
 
 for _, v in pairs(Workspace:GetDescendants()) do
     clearTextures(v)
 end
 
---Workspace.DescendantAdded:Connect(function(v)
-    --clearTextures(v)
---end)
+Workspace.DescendantAdded:Connect(function(v)
+    clearTextures(v)
+end)
