@@ -56,6 +56,6 @@ for _, v in pairs(Workspace:GetDescendants()) do
     clearTextures(v)
 end
 
-Workspace.DescendantAdded:Connect(function(v)
-    clearTextures(v)
-end)
+--Workspace.DescendantAdded:Connect(function(v)
+    --clearTextures(v)
+--end)
