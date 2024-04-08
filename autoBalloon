@@ -1,206 +1,300 @@
--- MADE FIREDEVIL DO NOT SKID
-print("Made By firedevil (Ryan | 404678244215029762 | https://discord.gg/ettP4TjbAb)")
+--credit goes to kitty ware
+repeat task.wait(1) until game.PlaceId ~= nil
+repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
+repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
+if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
+	wait(10)
+	pcall(function()
+		for _, v in pairs(game:GetService("Workspace"):FindFirstChild("__THINGS"):GetChildren()) do
+			if table.find({"ShinyRelics", "Ornaments", "Instances", "Ski Chairs"}, v.Name) then
+				v:Destroy()
+			end
+		end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/waitForGameLoad.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/antiStaff.lua"))()
+		for _, v in pairs(game:GetService("Workspace"):FindFirstChild("__THINGS").__INSTANCE_CONTAINER.Active.AdvancedFishing:GetChildren()) do
+			if string.find(v.Name, "Model") or string.find(v.Name, "Water") or string.find(v.Name, "Debris") or string.find(v.Name, "Interactable") then
+				v:Destroy()
+			end
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local LocalPlayer = game:GetService("Players").LocalPlayer
-local breakables = game:GetService("Workspace"):WaitForChild("__THINGS"):WaitForChild("Breakables")
-local Client = ReplicatedStorage:WaitForChild("Library"):WaitForChild("Client")
+			if v.Name == "Map" then
+				for _, v in pairs(v:GetChildren()) do
+					if v.Name ~= "Union" then
+						v:Destroy()
+					end
+				end
+			end
+		end
 
-pcall(function()
-    LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+		game:GetService("Workspace"):WaitForChild("ALWAYS_RENDERING"):Destroy()
+	end)
 
-    if getconnections then
-        for _, v in pairs(getconnections(LocalPlayer.Idled)) do
-            v:Disable()
-        end
-    else
-        LocalPlayer.Idled:Connect(function()
-            game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-            task.wait(1)
-            game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-        end)
-    end
-end)
+	local Workspace = game:GetService("Workspace")
+	local Terrain = Workspace:WaitForChild("Terrain")
+	Terrain.WaterReflectance = 0
+	Terrain.WaterTransparency = 1
+	Terrain.WaterWaveSize = 0
+	Terrain.WaterWaveSpeed = 0
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/lowCpu.lua"))()
+	local Lighting = game:GetService("Lighting")
+	Lighting.Brightness = 0
+	Lighting.GlobalShadows = false
+	Lighting.FogEnd = 9e100
+	Lighting.FogStart = 0
 
-local startTimestamp = os.time()
-task.wait(getgenv().autoBalloonConfig.START_DELAY)
-local balloonGifts = {}
+	sethiddenproperty(Lighting, "Technology", 2)
+	sethiddenproperty(Terrain, "Decoration", false)
 
-require(Client.PlayerPet).CalculateSpeedMultiplier = function()
-    return 200
+	local function clearTextures(v)
+		if v:IsA("BasePart") and not v:IsA("MeshPart") then
+			v.Material = "Plastic"
+			v.Reflectance = 0
+			v.Transparency = 1
+		elseif (v:IsA("Decal") or v:IsA("Texture")) then
+			v.Transparency = 1
+		elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+			v.Lifetime = NumberRange.new(0)
+		elseif v:IsA("Explosion") then
+			v.BlastPressure = 1
+			v.BlastRadius = 1
+		elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+			v.Enabled = false
+		elseif v:IsA("MeshPart") then
+			v.Material = "Plastic"
+			v.Reflectance = 0
+			v.TextureID = 10385902758728957
+		elseif v:IsA("SpecialMesh")  then
+			v.TextureId = 0
+		elseif v:IsA("ShirtGraphic") then
+			v.Graphic = 1
+		elseif (v:IsA("Shirt") or v:IsA("Pants")) then
+			v[v.ClassName .. "Template"] = 1
+		elseif v.Name == "Foilage" and v:IsA("Folder") then
+			v:Destroy()
+		elseif string.find(v.Name, "Tree") or string.find(v.Name, "Water") or string.find(v.Name, "Bush") or string.find(v.Name, "grass") then
+			task.wait()
+			v:Destroy()
+		end
+	end
+
+	game:GetService("Lighting"):ClearAllChildren()
+
+	for _, v in pairs(Workspace:GetDescendants()) do
+		clearTextures(v)
+	end
+
+	Workspace.DescendantAdded:Connect(function(v)
+		clearTextures(v)
+	end)
+    	game:GetService("RunService"):Set3dRenderingEnabled(false)
+	setfpscap(8)
+end	
+local LargeRAP = 10400; local SmallRAP = 2720
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+local Player = game:GetService("Players").LocalPlayer
+local RepStor = game:GetService("ReplicatedStorage")
+local Library = require(RepStor.Library)
+local HRP = Player.Character.HumanoidRootPart
+local saveMod = require(RepStor.Library.Client.Save)
+local BreakMod = require(RepStor.Library.Client.BreakableCmds)
+local Slingshot = getsenv(Player.PlayerScripts.Scripts.Game.Misc.Slingshot)
+local RAPValues = getupvalues(require(RepStor.Library).DevRAPCmds.Get)[1]
+hookfunction(require(game.ReplicatedStorage.Library.Client.PlayerPet).CalculateSpeedMultiplier, function() return 250 end)
+function getInfo(name) return saveMod.Get()[name] end 
+function getTool() return Player.Character:FindFirstChild("WEAPON_"..Player.Name, true) end
+function equipTool(toolName) return Library.Network.Invoke(toolName.."_Toggle") end
+function getCurrentZone() return Library["MapCmds"].GetCurrentZone() end
+function sendNotif(msg)
+	local message = {content = msg}
+	local jsonMessage = HttpService:JSONEncode(message)
+	local success, webMessage = pcall(function() 
+		HttpService:PostAsync(getgenv().MoneyPrinter.webURL, jsonMessage) 
+	end)
+	if not success then 
+		local response = request({Url = getgenv().MoneyPrinter.webURL,Method = "POST",Headers = {["Content-Type"] = "application/json"},Body = jsonMessage})
+	end
+end
+function getBalloonUID(zoneName) 
+	for i,v in pairs(BreakMod.AllByZoneAndClass(zoneName, "Chest")) do
+		if v:GetAttribute("OwnerUsername") == Player.Name and string.find(v:GetAttribute("BreakableID"), "Balloon Gift") then
+			return v:GetAttribute("BreakableUID")
+		elseif v:GetAttribute("OwnerUserName") ~= Player.Name and string.find(v:GetAttribute("BreakableID"), "Balloon Gift") then
+			return "Skip"
+		end
+	end
+end
+-- Define the numbers to choose from
+local numbers = {1, 2, 3, 4, 5, 6}
+
+local MINIMUM_PLAYERS = numbers[math.random(1, #numbers)]
+
+--// Services
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local LocalPlayer = Players.LocalPlayer
+
+local CurrentWorld = ""
+local CurrentPosition = nil
+
+--// Variables
+local PlaceId = game.PlaceId
+local fileName = string.format("%s_servers.json", tostring(PlaceId))
+local ServerHopData = { 
+    CheckedServers = {},
+    LastTimeHop = nil,
+    CreatedAt = os.time() -- We can use it later to clear the checked servers
+    -- TODO: Save the cursor? Prob this can help on fast-hops
+}
+
+-- Load data from disk/workspace
+if isfile(fileName) then
+    local fileContent = readfile(fileName)
+    ServerHopData = HttpService:JSONDecode(fileContent)
 end
 
-for _, lootbag in pairs(game:GetService("Workspace").__THINGS:FindFirstChild("Lootbags"):GetChildren()) do
-    if lootbag then
-        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbags_Claim"):FireServer(unpack( { [1] = { [1] = lootbag.Name, }, } ))
-        lootbag:Destroy()
-        task.wait()
-    end
+-- Optional log feature
+if ServerHopData.LastTimeHop then
+    print("Took", os.time() - ServerHopData.LastTimeHop, "seconds to server hop")
 end
 
-game:GetService("Workspace").__THINGS:FindFirstChild("Lootbags").ChildAdded:Connect(function(lootbag)
-    task.wait()
-    if lootbag then
-        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Lootbags_Claim"):FireServer(unpack( { [1] = { [1] = lootbag.Name, }, } ))
-        lootbag:Destroy()
-    end
-end)
+local ServerTypes = { ["Normal"] = "desc", ["Low"] = "asc" }
 
-game:GetService("Workspace").__THINGS:FindFirstChild("Orbs").ChildAdded:Connect(function(orb)
-    task.wait()
-    if orb then
-        game:GetService("ReplicatedStorage"):WaitForChild("Network"):FindFirstChild("Orbs: Collect"):FireServer(unpack( { [1] = { [1] = tonumber(orb.Name), }, } ))
-        orb:Destroy()
-    end
-end)
-
-breakables.ChildAdded:Connect(function(child)
-    pcall(function()
-        if string.find(child:GetAttribute("BreakableID"), "Balloon Gift") and child:GetAttribute("OwnerUsername") == LocalPlayer.Name then
-            table.insert(balloonGifts, child)
-        end
-    end)
-end)
-
-breakables.ChildRemoved:Connect(function(child)
-    pcall(function()
-        if string.find(child:GetAttribute("BreakableID"), "Balloon Gift") and child:GetAttribute("OwnerUsername") == LocalPlayer.Name then
-            table.remove(balloonGifts, table.find(balloonGifts, child))
-        end
-    end)
-end)
-
-
-while getgenv().autoBalloon do
-    local balloonIds = {}
-
-    local getActiveBalloons = ReplicatedStorage.Network.BalloonGifts_GetActiveBalloons:InvokeServer()
-
-    local allPopped = true
-    for i, v in pairs(getActiveBalloons) do
-        if not v.Popped then
-            allPopped = false
-            balloonIds[i] = v
-        end
+function Jump(serverType)
+    serverType = serverType or "Normal" -- Default parameter
+    if not ServerTypes[serverType] then serverType = "Normal" end
+    
+    local function GetServerList(cursor)
+        cursor = cursor and "&cursor=" .. cursor or ""
+        local API_URL = string.format('https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=100', tostring(PlaceId), ServerTypes[serverType])
+        return HttpService:JSONDecode(game:HttpGet(API_URL .. cursor))
     end
 
-    local notContinuing = true
-    if allPopped then
-        print("No balloons detected, waiting " .. tostring(getgenv().autoBalloonConfig.GET_BALLOON_DELAY) .. " seconds")
-        task.wait(getgenv().autoBalloonConfig.GET_BALLOON_DELAY)
-        notContinuing = false
-    end
-
-    if notContinuing then
-        if not getgenv().autoBalloon then
-            break
-        end
-
-        local originalPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
-
-        LocalPlayer.Character.HumanoidRootPart.Anchored = true
-        for balloonId, balloonData in pairs(balloonIds) do
-            local balloonPosition = balloonData.Position
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(balloonPosition.X, balloonPosition.Y + 30, balloonPosition.Z)
-            ReplicatedStorage.Network.Slingshot_Toggle:InvokeServer()
-            task.wait()
-            ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(Vector3.new(balloonPosition.X, balloonPosition.Y + 25, balloonPosition.Z), 0.5794160315249014, -0.8331117721691044, 200)
-            task.wait()
-            ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
-            task.wait()
-            ReplicatedStorage.Network.Slingshot_Unequip:InvokeServer()
-
-            -- BREAK BREAKABLES
-            print("Breaking balloon boxes")
-
-            local balloonLandPos = balloonData.LandPosition
-
-            local loadBreaks
-            local foundBreaks = false
-
-            loadBreaks = breakables.ChildAdded:Connect(function(child)
-                if string.find(child:GetAttribute("BreakableID"), "Balloon Gift") and child:GetAttribute("OwnerUsername") == LocalPlayer.Name then
-                    foundBreaks = true
-                end
-            end)
-
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(balloonLandPos.X, balloonLandPos.Y+5, balloonLandPos.Z)
-            LocalPlayer.Character.HumanoidRootPart.Anchored = false
-
-            print("Waiting for balloon drop")
-            local counter = 0
-
-            local exiting = false
-            while not foundBreaks do
-                counter = counter + 1
-                if counter > (getgenv().autoBalloonConfig.GIFT_BOX_BREAK_FAILSAFE * 20) then
-                    print("Balloon drop not found")
-                    counter = 0
-                    exiting = true
-                    if getgenv().autoBalloonConfig.SERVER_HOP_AFTER_NOT_FIND then
-                        local timeElapsed = os.time() - startTimestamp
-                        if timeElapsed < getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
-                            task.wait(getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME - timeElapsed)
-                        end
-                        loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/hop"))()
-                    end
-                    break
-                end
-                task.wait(0.05)
+    local currentPageCursor = nil
+    while true do 
+        local serverList = GetServerList(currentPageCursor)
+        currentPageCursor = serverList.nextPageCursor
+           
+        for _, server in ipairs(serverList.data) do
+            if server.playing and tonumber(server.playing) >= MINIMUM_PLAYERS and tonumber(server.playing) < Players.MaxPlayers and tonumber(server.ping) <= 100 and not table.find(ServerHopData.CheckedServers, tostring(server.id)) then     
+                -- Save current data to disk/workspace
+                ServerHopData.LastTimeHop = os.time() -- Last time that tried to hop
+                table.insert(ServerHopData.CheckedServers, server.id) -- Insert on our list
+                writefile(fileName, HttpService:JSONEncode(ServerHopData)) -- Save our data
+                TeleportService:TeleportToPlaceInstance(PlaceId, server.id, LocalPlayer) -- Actually teleport the player
+                -- Change the wait time if you take long times to hop (or it will add more than 1 server in the file)
+                wait(0.25)
             end
-
-            if not exiting then
-                loadBreaks:Disconnect()
-                task.wait()
-
-                for _, v in pairs(balloonGifts) do
-                    local brokeBox = false
-                    task.spawn(function()
-                        while breakables:FindFirstChild(v.Name) do
-                            game:GetService("ReplicatedStorage").Network.Breakables_PlayerDealDamage:FireServer(v.Name)
-                            task.wait()
-                        end
-                        brokeBox = true
-                    end)
-
-                    local counter = 0
-                    while counter < (getgenv().autoBalloonConfig.GIFT_BOX_BREAK_FAILSAFE * 20) do
-                        if brokeBox then
-                            break
-                        end
-                        counter = counter + 1
-                        task.wait(0.05)
-                    end
-
-                    print("Broke balloon box")
-                end
-                LocalPlayer.Character.HumanoidRootPart.Anchored = true
-            end
-            print("After exting")
-
-            print("Popped balloon")
-            task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
         end
-
-        if getgenv().autoBalloonConfig.SERVER_HOP then
-            local timeElapsed = os.time() - startTimestamp
-            if timeElapsed < getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
-                task.wait(getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME - timeElapsed)
-            end
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/hop"))()
-        end
-
-        LocalPlayer.Character.HumanoidRootPart.Anchored = false
-        LocalPlayer.Character.HumanoidRootPart.CFrame = originalPosition
-    end
-
-    if (os.time() - startTimestamp) > getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/AwesomeDudePerfect/psx-gem-farm/main/hop"))()
-    end
+        
+        if not currentPageCursor then break else wait(0.25) end
+    end  
 end
--- MADE FIREDEVIL DO NOT SKID
+function getPresents()
+	for i,v in pairs(Library.Save.Get().HiddenPresents) do 
+		if not v.Found and v.ID then 
+			local success,reason = Library.Network.Invoke("Hidden Presents: Found", v.ID) 
+		end 
+	end 
+end
+function getTotalRAP(num)
+	local suffixes = {"", "k", "m", "b"}
+	local suffixInd = 1
+	while num >= 1000 and suffixInd < #suffixes do
+		num = num / 1000
+		suffixInd = suffixInd + 1
+	end
+	local formattedNum
+	if num % 1 == 0 then
+		formattedNum = string.format("%d", num)
+	else
+		formattedNum = string.format("%.1f", num):gsub("%.?0+$", "")
+	end
+	return formattedNum .. suffixes[suffixInd]
+end
+-- AUTO ORB
+local autoOrbConnection = nil
+local autoLootBagConnection = nil
+for i, v in workspace.__THINGS.Orbs:GetChildren() do
+	Library.Network.Fire("Orbs: Collect",{tonumber(v.Name)})
+	Library.Network.Fire("Orbs_ClaimMultiple",{[1]={[1]=v.Name}})
+	task.wait()
+	v:Destroy()
+end
+for i, v in workspace.__THINGS.Lootbags:GetChildren() do
+	Library.Network.Fire("Lootbags_Claim",{v.Name})
+	task.wait()
+	v:Destroy()
+end
+autoOrbConnection = workspace.__THINGS.Orbs.ChildAdded:Connect(function(v)
+	Library.Network.Fire("Orbs: Collect",{tonumber(v.Name)})
+	Library.Network.Fire("Orbs_ClaimMultiple",{[1]={[1]=v.Name}})
+	task.wait()
+	v:Destroy()
+end)
+autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(v)
+	Library.Network.Fire("Lootbags_Claim",{v.Name})
+	task.wait()
+	v:Destroy()
+end)
+local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
+if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
+	print('server is empty!')
+	Jump("Normal")
+end
+local startGifts = 0
+local startLarge = 0
+for i,v in pairs(getInfo("Inventory").Misc) do
+	if startGifts ~= 0 and startLarge ~= 0 then break end
+	if v.id == "Gift Bag" then
+		startGifts = (v._am or 1)
+	elseif v.id == "Large Gift Bag" then
+		startLarge = (v._am or 1)
+	end
+end
+local startTime = os.time()
+task.spawn(function()
+	wait(1140)
+	Jump("Normal")
+end)
+while getgenv().MoneyPrinter.autoBalloons do task.wait()
+	if getgenv().MoneyPrinter.autoPresents then getPresents() end
+	for _,Balloon in pairs(Library.Network.Invoke("BalloonGifts_GetActiveBalloons")) do task.wait(0.03)
+		if Balloon.Id then
+			while Library.Network.Invoke("BalloonGifts_GetActiveBalloons")[Balloon.Id] do task.wait(0.03)
+				if not getTool() then equipTool(getgenv().MoneyPrinter.toolName) end
+				local breakableId = getBalloonUID(getCurrentZone())
+				if breakableId == "Skip" then break end
+				if breakableId then
+					HRP.CFrame = CFrame.new(Balloon.LandPosition)
+					Library.Network.Fire("Breakables_PlayerDealDamage", breakableId)
+				elseif not Balloon.Popped then
+					HRP.CFrame = CFrame.new(Balloon.Position + Vector3.new(0,30,0))
+					Slingshot.fireWeapon()
+					Library.Network.Fire("BalloonGifts_BalloonHit", Balloon.Id)
+					task.wait()
+				end
+			end
+		end
+	end
+	local currentTime = os.time()
+	if getgenv().MoneyPrinter.serverHopper then
+		if not getgenv().MoneyPrinter.avoidCooldown or (getgenv().MoneyPrinter.avoidCooldown and currentTime - startTime >= getgenv().MoneyPrinter.minServerTime) then
+			local endGifts = 0
+			local endLarge = 0 
+			for i,v in pairs(getInfo("Inventory").Misc) do
+				if endGifts ~= 0 and endLarge ~= 0 then break end
+				if v.id == "Gift Bag" then
+					endGifts = (v._am or 1)
+				elseif v.id == "Large Gift Bag" then
+					endLarge = (v._am or 1)
+				end
+			end
+			if getgenv().MoneyPrinter.sendWeb then
+				local totalValue = (endLarge * LargeRAP) + (endGifts * SmallRAP)
+				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- total value: "..tostring(getTotalRAP(totalValue)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons```")
+			end
+			Jump("Normal")
+		end
+	end
+end
