@@ -51,7 +51,7 @@ function Jump(serverType)
         currentPageCursor = serverList.nextPageCursor
            
         for _, server in ipairs(serverList.data) do
-            if server.playing and tonumber(server.playing) >= MINIMUM_PLAYERS and tonumber(server.playing) < Players.MaxPlayers and tonumber(server.ping) <= 100 and not table.find(ServerHopData.CheckedServers, tostring(server.id)) then     
+            if server.playing and tonumber(server.playing) >= 1 and tonumber(server.playing) < Players.MaxPlayers and tonumber(server.ping) <= 100 and not table.find(ServerHopData.CheckedServers, tostring(server.id)) then     
                 -- Save current data to disk/workspace
                 ServerHopData.LastTimeHop = os.time() -- Last time that tried to hop
                 table.insert(ServerHopData.CheckedServers, server.id) -- Insert on our list
