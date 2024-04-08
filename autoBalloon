@@ -1,7 +1,8 @@
 --credit goes to kitty ware
-repeat task.wait(1) until game.PlaceId ~= nil
-repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
-repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/waitForGameLoad.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/antiStaff.lua"))()
+
 if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 	wait(10)
 	pcall(function()
